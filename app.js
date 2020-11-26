@@ -4,13 +4,11 @@ const app = express()
 
 const mongoose = require('mongoose');
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
   });
-
-app.use(cors())
-
 
 const uri = 'mongodb+srv://opudupreye:5gr3gF4YVD5F6K2b@billiontraderx.bxlns.mongodb.net/<billiontraderx>?retryWrites=true&w=majority';
 mongoose.connect(uri, {useNewUrlParser: true,useUnifiedTopology: true})
@@ -20,7 +18,6 @@ mongoose.connect(uri, {useNewUrlParser: true,useUnifiedTopology: true})
 .catch(err => console.log(err))
 
 
-// mongoose.connect('mongodb://localhost:27017/btx', {useNewUrlParser: true, useUnifiedTopology: true});
 const stackRoutes= require('./routes/stack-route')
 const authRoutes=require('./routes/auth-route')
 const adminRoutes=require('./routes/admin-route')
@@ -53,19 +50,6 @@ passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
 
 
-// user.remove({},(err)=>{
-//     if(err){
-//         console.log(err)
-//     }
-//     else{
-//         console.log("success")
-//     }
-// })
-
-// Withdraw.remove({},(err)=>{
-//     if(err){console.log()}
-// })
-
 app.use(function(req,res,next){
     res.locals.error=req.flash("error")
     res.locals.success=req.flash('success')
@@ -73,10 +57,10 @@ app.use(function(req,res,next){
 })
 
 
-app.use(authRoutes,cors());
-app.use(stackRoutes,cors());
-app.use(adminRoutes,cors());
-app.use(userRoutes,cors());
+app.use(authRoutes);
+app.use(stackRoutes);
+app.use(adminRoutes);
+app.use(userRoutes);
 
 app.get('/:user', (req, res) => {
     const founduser =req.params.user
