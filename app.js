@@ -3,6 +3,12 @@ var cors = require('cors');
 const app = express()
 
 const mongoose = require('mongoose');
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+  });
+
 app.use(cors())
 
 
