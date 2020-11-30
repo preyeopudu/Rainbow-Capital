@@ -14,7 +14,8 @@ const userSchema=new mongoose.Schema({
     withdrawble:{type:Number,default:0},
     deposit:{type:Number,default:0},
     stack:[Stack.schema],
-    receipt:[Receipt.schema]
+    receipt:[Receipt.schema],
+    notice:{type:Boolean,default:true}
 })
 
 

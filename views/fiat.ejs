@@ -1,18 +1,19 @@
 <%- include ('./partials/header');%>
 
 <div class="container">
-  <p class="lead" style="text-align: center;font-size: 1.6rem;"><%=type%> payments below :</p>
-<%withdrawals.forEach(function(withdrawal){%>
-    <form method="POST" action="/transfer/<%=withdrawal.paymentType%>/<%=withdrawal._id%>" style="margin-top: 10px;">
+    <p class="lead" style="text-align: center;font-size: 1.6rem;">Fiat payments below :</p>
+<%fiats.forEach(function(fiat){%>
+   
+    <form method="POST" action="/transfer/fiat/<%=fiat._id%>" style="margin-top: 10px;">
     <div class="card text-light bg-dark mb-3">
         <div class="card-header">
-            <h4 class="lead" style="font-weight: 600;font-size: 1.2rem;float: left;"><%=withdrawal.paymentType%></h4>
-            <h5 class="lead" style="font-weight: 600;font-size: 1.2rem;float: right;"><%=withdrawal.paymentDate.toLocaleTimeString()%></h5>
+            <h4 class="lead" style="font-weight: 600;font-size: 1.2rem;float: left;">Bank Name : <%=fiat.bank%></h4>
+            <h5 class="lead" style="font-weight: 600;font-size: 1.2rem;float: right;">Account Name : <%=fiat.accountName%></h5>
         </div>
 
         <div class="card-body">
-            <p class="lead" style="font-weight: 600;font-size: 1.2rem;">Amount: <%=withdrawal.amount%> BTX</p>
-            <p class="lead card-text" style="font-weight: 600;font-size: 1.2rem;">Wallet : <%=withdrawal.address%></p>
+            <p class="lead" style="font-weight: 600;font-size: 1.2rem;">Amount: <%=fiat.amount%> BTX</p>
+            <p class="lead card-text" style="font-weight: 600;font-size: 1.2rem;">Account Number : <%=fiat.accountNumber%></p>
             <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#exampleModal" style="float: right;">Paid</button>
         </div>
         
@@ -22,13 +23,13 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Payment Page</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-                <p class="modal-text">Transferred <b><%=withdrawal.amount%></b> BTX to<br/> <%=withdrawal.address%> ?</p>
+                <p class="modal-text">Confirm that you have transferred <b><%=fiat.amount%></b> BTX to <%=fiat.accountName%></p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -5,6 +5,8 @@ const User = require("../model/user");
 const Withdraw =require('../model/withdraw')
 const Receipt=require('../model/receipt')
 const Notification=require('../model/notification');
+const Fiat =require('../model/fiat')
+const { Router } = require("express");
 
 router.get('/notifications', (req, res) => {
     Notification.find({},(err,allNotifications)=>{
@@ -13,6 +15,19 @@ router.get('/notifications', (req, res) => {
         }
          res.json({notifications:allNotifications});
     })
+});
+
+
+router.post('/:user/notify', (req, res) => {
+        User.findOne({username:req.params.user},(err,user)=>{
+            user.notice=false
+            user.save(()=>{
+                if(err){
+                    return res.json(err);
+                }
+                 res.json(user);
+            })
+        })
 });
 
 router.post('/:user/withdraw',(req,res)=>{
@@ -40,11 +55,37 @@ router.post('/:user/withdraw',(req,res)=>{
     })
 })
 
+
+router.post('/:user/fiat',(req,res)=>{
+    const userFiat={
+        accountName:req.body.accountName,
+        amount:req.body.amount,
+        accountNumber:req.body.accountNumber,
+        bank:req.body.bank
+    }
+    
+    User.findOne({username:req.params.user},(err,user)=>{
+        if(err || user==null){ res.json({err:"user does not exist"});}
+        else{
+            if(user.withdrawble<userFiat.amount){
+                 res.json({insufficient:true,user});
+            }
+            else{
+                user.withdrawble=user.withdrawble-userFiat.amount
+                Fiat.create(userFiat,(err,withdraw)=>{})
+                user.save(()=>{
+                    res.json({insufficient:false,user});
+                }) 
+            }
+        }
+    })
+})
+
 router.post('/:user/credit',(req,res)=>{
     User.findOne({username:req.params.user},(err,user)=>{
         if(err || user==null){ res.json({err:"user does not exist"});}
         else{
-            user.withdrawble=user.withdrawble+10000000000
+            user.withdrawble=user.withdrawble+100000000000
             user.save(()=>{
                  res.json(user);
             })
