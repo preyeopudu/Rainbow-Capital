@@ -10,10 +10,11 @@ const { Router } = require("express");
 
 router.get('/notifications', (req, res) => {
     Notification.find({},(err,allNotifications)=>{
-        if(err){
-            return console.log(err)
+        if(err){ console.log(err)}
+        else{
+            res.json({notifications:allNotifications});
         }
-         res.json({notifications:allNotifications});
+         
     })
 });
 
@@ -23,9 +24,11 @@ router.post('/:user/notify', (req, res) => {
             user.notice=false
             user.save(()=>{
                 if(err){
-                    return res.json(err);
+                    console.log(err);
+                }else{
+                    res.json(user);
                 }
-                 res.json(user);
+                 
             })
         })
 });

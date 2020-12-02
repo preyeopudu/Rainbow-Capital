@@ -30,7 +30,7 @@ router.post('/:user/stack/emerald', (req, res) => {
                         }
                         
                         if(user.bonus===false){
-                            User.findOne({username:user.referee},(err,found)=>{
+                            User.findOne({username:user.referee},(err,foundrefree)=>{
                                 if(err || found==null){console.log('error')}
                                 else{
                                     if(user.username!=foundrefree.username){

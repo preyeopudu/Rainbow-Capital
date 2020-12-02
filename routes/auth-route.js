@@ -31,8 +31,7 @@ router.post('/auth/signup',(req,res)=>{
 })  
 
 
-router.post('/auth/signin',passport.authenticate("local"),async (req,res)=>{
-
+router.post('/auth/signin',passport.authenticate("local"),(req,res)=>{
     res.json({
         auth:true,
         message:"Succesfully Signed Up",
