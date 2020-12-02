@@ -31,12 +31,12 @@ router.post('/:user/stack/emerald', (req, res) => {
                         
                         if(user.bonus===false){
                             User.findOne({username:user.referee},(err,foundrefree)=>{
-                                if(err || found==null){console.log('error')}
+                                if(err || foundrefree==null){console.log('error')}
                                 else{
                                     if(user.username!=foundrefree.username){
                                         console.log("duped")
-                                    found.deposit= found.deposit + 500
-                                    found.save()
+                                    foundrefree.deposit= foundrefree.deposit + 500
+                                    foundrefree.save()
                                     }
                                     
                                 }
