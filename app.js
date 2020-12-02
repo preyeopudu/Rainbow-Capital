@@ -7,12 +7,11 @@ app.use(cors())
 
 
 const uri = 'mongodb+srv://opudupreye:5gr3gF4YVD5F6K2b@billiontraderx.bxlns.mongodb.net/<billiontraderx>?retryWrites=true&w=majority';
-mongoose.connect(process.env.databaseURL, {useNewUrlParser: true,useUnifiedTopology: true})
+mongoose.connect(uri, {useNewUrlParser: true,useUnifiedTopology: true})
 .then(() => {
   console.log('MongoDB Connected…')
 })
 .catch(err => console.log(err))
-
 
 
 

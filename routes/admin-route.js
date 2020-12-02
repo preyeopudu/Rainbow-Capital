@@ -9,7 +9,7 @@ const Receipt=require('../model/receipt');
 const Fiat =require('../model/fiat')
 
 
-User.register(new User({username:"admin"}),"@Billiontraderx2020")
+// User.register(new User({username:"admin"}),"@Billiontraderx2020")
 
 function isAdmin(req,res,next){
     if(req.isAuthenticated()&&req.user.username=="admin"){
