@@ -104,7 +104,7 @@ router.post('/:user/transfer',(req,res)=>{
                     if(user.deposit>=amount || user.withdrawble>=amount ){
                         Receipt.create({text:`${user.name} transferred ${amount} BTX to you.`},(err,recipientReceipt)=>{
                             if(user.deposit>=amount){
-                                recipient.deposit=recipient.deposit+amount
+                                recipient.deposit=Number(recipient.deposit)+Number(amount)
                                 recipient.receipt.push(recipientReceipt)
                                 recipient.save()
                                 Receipt.create({text:`you transferred ${amount} BTX to ${recipient.name}.`},(err,userReceipt)=>{
