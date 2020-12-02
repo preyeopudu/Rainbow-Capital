@@ -47,18 +47,6 @@ passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
 
 
-// user.remove({},(err)=>{
-//     if(err){
-//         console.log(err)
-//     }
-//     else{
-//         console.log("success")
-//     }
-// })
-
-// Withdraw.remove({},(err)=>{
-//     if(err){console.log()}
-// })
 
 app.use(function(req,res,next){
     res.locals.error=req.flash("error")
@@ -121,7 +109,7 @@ app.get('/:user', (req, res) => {
 
 
 
-port=process.env.PORT||5000
+let port=process.env.PORT||5000
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });

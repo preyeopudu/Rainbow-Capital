@@ -21,16 +21,6 @@ router.post('/:user/stack/emerald', (req, res) => {
             }
             else{
                 if(user.deposit>=emerald.cost || user.withdrawble>=emerald.cost ){
-                    if(user.bonus===false){
-                        User.findOne({username:user.referee},(err,found)=>{
-                            if(err || found==null){console.log('error')}
-                            else{
-                                found.deposit= found.deposit + 500
-                                found.save()
-                                user.bonus=true
-                            }
-                        })
-                    }
                     Stack.create(emerald,(err,stack)=>{
                         if(user.deposit>=emerald.cost){
                             user.deposit=user.deposit-emerald.cost
@@ -38,10 +28,29 @@ router.post('/:user/stack/emerald', (req, res) => {
                         else if(user.withdrawble>=emerald.cost){
                             user.withdrawble=user.withdrawble-emerald.cost
                         }
-                        user.stack.push(stack)
-                        user.save(()=>{
-                             res.json({user});
-                    })
+                        
+                        if(user.bonus===false){
+                            User.findOne({username:user.referee},(err,found)=>{
+                                if(err || found==null){console.log('error')}
+                                else{
+                                    if(user.username!=foundrefree.username){
+                                        console.log("duped")
+                                    found.deposit= found.deposit + 500
+                                    found.save()
+                                    }
+                                    
+                                }
+                            })
+
+                            user.stack.push(stack)
+                            user.bonus=
+                            user.save(()=>{
+                                res.json({user});
+                       })
+
+
+                        }
+                       
                 })
                 }
                 else{
@@ -71,17 +80,7 @@ router.post('/:user/stack/ruby', (req, res) => {
             }
             else{
                 if(user.deposit>=ruby.cost || user.withdrawble>=ruby.cost ){
-                    if(user.bonus===false){
-                        User.findOne({username:user.referee},(err,foundrefree)=>{
-                            if(err || foundrefree==null){console.log('error')}
-                            else{
-                                foundrefree.deposit= foundrefree.deposit + 1000
-                                foundrefree.save()
-                                console.log(foundrefree)
-                                user.bonus=true
-                            }
-                        })
-                    }
+                    
                     Stack.create(ruby,(err,stack)=>{
                         if(user.deposit>=ruby.cost){
                             user.deposit=user.deposit-ruby.cost
@@ -90,6 +89,20 @@ router.post('/:user/stack/ruby', (req, res) => {
                             user.withdrawble=user.withdrawble-ruby.cost
                         }
                         user.stack.push(stack)
+                        if(user.bonus===false){
+                            User.findOne({username:user.referee},(err,foundrefree)=>{
+                                if(err || foundrefree==null){console.log('error')}
+                                else{
+                                    if(user.username!=foundrefree.username){
+                                    foundrefree.deposit= foundrefree.deposit + 1000
+                                    console.log("duped")
+                                    foundrefree.save()
+                                    console.log(foundrefree)}
+                                    
+                                }
+                            })
+                        }
+                        user.bonus=true
                         user.save(()=>{
                              res.json({user});
                     })
@@ -118,16 +131,7 @@ router.post('/:user/stack/beryl', (req, res) => {
                 res.json({active:true})
             }
             else{
-                if(user.bonus===false){
-                    User.findOne({username:user.referee},(err,foundrefree)=>{
-                        if(err || foundrefree==null){console.log('error')}
-                        else{
-                            foundrefree.deposit= foundrefree.deposit + 1500
-                            foundrefree.save()
-                            user.bonus=true
-                        }
-                    })
-                }
+                
 
                 if(user.deposit>=beryl.cost || user.withdrawble>=beryl.cost ){
                     Stack.create(beryl,(err,stack)=>{
@@ -137,7 +141,21 @@ router.post('/:user/stack/beryl', (req, res) => {
                         else if(user.withdrawble>=beryl.cost){
                             user.withdrawble=user.withdrawble-beryl.cost
                         }
+                        if(user.bonus===false){
+                            User.findOne({username:user.referee},(err,foundrefree)=>{
+                                if(err || foundrefree==null){console.log('error')}
+                                else{
+                                    if(user.username!=foundrefree.username){
+                                    foundrefree.deposit= foundrefree.deposit + 1500
+                                    console.log('duped')
+                                    foundrefree.save()
+                                    }
+                                    
+                                }
+                            })
+                        }
                         user.stack.push(stack)
+                        user.bonus=true
                         user.save(()=>{
                              res.json({user});
                     })
@@ -172,16 +190,7 @@ router.post('/:user/stack/onyx', (req, res) => {
             }
             else{
                 if(user.deposit>=onyx.cost || user.withdrawble>=onyx.cost ){
-                    if(user.bonus===false){
-                        User.findOne({username:user.referee},(err,foundrefree)=>{
-                            if(err || foundrefree==null){console.log('error')}
-                            else{
-                                foundrefree.deposit= foundrefree.deposit + 2000
-                                foundrefree.save()
-                                user.bonus=true
-                            }
-                        })
-                    }
+                    
                     Stack.create(onyx,(err,stack)=>{
                         if(user.deposit>=onyx.cost){
                             user.deposit=user.deposit-onyx.cost
@@ -190,6 +199,17 @@ router.post('/:user/stack/onyx', (req, res) => {
                             user.withdrawble=user.withdrawble-onyx.cost
                         }
                         user.stack.push(stack)
+                        if(user.bonus===false){
+                            User.findOne({username:user.referee},(err,foundrefree)=>{
+                                if(err || foundrefree==null){console.log('error')}
+                                else{
+                                    if(user.username!=foundrefree.username){
+                                    foundrefree.deposit= foundrefree.deposit + 2000
+                                    foundrefree.save() }
+                                }
+                            })
+                        }
+                        user.bonus=true
                         user.save(()=>{
                              res.json({user});
                     })
@@ -223,16 +243,7 @@ router.post('/:user/stack/sapphire', (req, res) => {
             }
             else{
                 if(user.deposit>=sapphire.cost || user.withdrawble>=sapphire.cost ){
-                    if(user.bonus===false){
-                        User.findOne({username:user.referee},(err,foundrefree)=>{
-                            if(err || foundrefree==null){console.log('error')}
-                            else{
-                                foundrefree.deposit= foundrefree.deposit + 3000
-                                foundrefree.save()
-                                user.bonus=true
-                            }
-                        })
-                    }
+                    
                     Stack.create(sapphire,(err,stack)=>{
                         if(user.deposit>=sapphire.cost){
                             user.deposit=user.deposit-sapphire.cost
@@ -241,6 +252,18 @@ router.post('/:user/stack/sapphire', (req, res) => {
                             user.withdrawble=user.withdrawble-sapphire.cost
                         }
                         user.stack.push(stack)
+                        if(user.bonus===false){
+                            User.findOne({username:user.referee},(err,foundrefree)=>{
+                                if(err || foundrefree==null||user.username==foundrefree.username){console.log('error')}
+                                else{
+                                    if(user.username!=foundrefree.username){
+                                    foundrefree.deposit= foundrefree.deposit + 3000
+                                    foundrefree.save()}
+                                }
+                            })
+                        }
+
+                        user.bonus=true
                         user.save(()=>{
                              res.json({user});
                     })
