@@ -7,11 +7,13 @@ app.use(cors())
 
 
 const uri = 'mongodb+srv://opudupreye:5gr3gF4YVD5F6K2b@billiontraderx.bxlns.mongodb.net/<billiontraderx>?retryWrites=true&w=majority';
-mongoose.connect(uri, {useNewUrlParser: true,useUnifiedTopology: true})
+mongoose.connect(process.env.databaseURL, {useNewUrlParser: true,useUnifiedTopology: true})
 .then(() => {
   console.log('MongoDB Connected…')
 })
 .catch(err => console.log(err))
+
+
 
 
 // mongoose.connect('mongodb://localhost:27017/btx', {useNewUrlParser: true, useUnifiedTopology: true});
@@ -110,6 +112,6 @@ app.get('/:user', (req, res) => {
 
 
 let port=process.env.PORT||5000
-app.listen(port, () => {
-    console.log(`Server started on port ${port}`);
+app.listen(process.env.PORT,process.env.IP, () => {
+    console.log(`Server started on port ${process.env.PORT}`);
 });
