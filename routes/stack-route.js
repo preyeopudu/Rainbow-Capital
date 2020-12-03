@@ -34,7 +34,7 @@ router.post('/:user/stack/emerald', (req, res) => {
                                 if(err || foundrefree==null){console.log('error')}
                                 else{
                                     if(user.username!=foundrefree.username){
-                                        console.log("duped")
+                                    console.log("duped")
                                     foundrefree.deposit= foundrefree.deposit + 500
                                     foundrefree.save()
                                     }
@@ -43,7 +43,7 @@ router.post('/:user/stack/emerald', (req, res) => {
                             })
 
                             user.stack.push(stack)
-                            user.bonus=
+                            user.bonus= true
                             user.save(()=>{
                                 res.json({user});
                        })
