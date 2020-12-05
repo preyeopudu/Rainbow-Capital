@@ -74,18 +74,18 @@ app.get('/:user', (req, res) => {
             const userStack=user.stack
             ///check if user is currently on a plan //
              if(userStack.length>0){
-                const today= new Date ()
+                const today= new Date()
                 const matureDate=userStack[0].matureDate
                  if(today >= matureDate){
                      Stack.findOneAndDelete({_id:userStack[0]._id},(err)=>{
-                         user.withdrawble=user.withdrawble+userStack[0].return
+                         user.withdrawble=Number(user.withdrawble)+Number(userStack[0].return)
                          user.stack.pop()
+
                          user.save((err)=>{
                              if(err){
-                                  res.json({message:"not saved"});
+                                  console.log({message:"not saved"});
                              }
                              else{
-                                 console.log(user.withdrawble);
                                  res.json({stack:true,user:user})
                              }
                          })
@@ -111,6 +111,6 @@ app.get('/:user', (req, res) => {
 
 
 let port=process.env.PORT||5000
-app.listen(process.env.PORT,process.env.IP, () => {
-    console.log(`Server started on port ${process.env.PORT}`);
+app.listen(port,process.env.IP, () => {
+    console.log(`Server started on port ${port}`);
 });
