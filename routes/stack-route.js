@@ -35,7 +35,7 @@ router.post('/:user/stack/emerald', (req, res) => {
                                 else{
                                     if(user.username!=foundrefree.username){
                                     console.log("duped")
-                                    foundrefree.deposit= foundrefree.deposit + 500
+                                    foundrefree.deposit=Number(foundrefree.deposit)  + 500
                                     foundrefree.save()
                                     }
                                     
@@ -94,7 +94,7 @@ router.post('/:user/stack/ruby', (req, res) => {
                                 if(err || foundrefree==null){console.log('error')}
                                 else{
                                     if(user.username!=foundrefree.username){
-                                    foundrefree.deposit= foundrefree.deposit + 1000
+                                    foundrefree.deposit= Number(foundrefree.deposit) + 1000
                                     console.log("duped")
                                     foundrefree.save()
                                     console.log(foundrefree)}
@@ -146,7 +146,7 @@ router.post('/:user/stack/beryl', (req, res) => {
                                 if(err || foundrefree==null){console.log('error')}
                                 else{
                                     if(user.username!=foundrefree.username){
-                                    foundrefree.deposit= foundrefree.deposit + 1500
+                                    foundrefree.deposit= Number(foundrefree.deposit) + 1500
                                     console.log('duped')
                                     foundrefree.save()
                                     }
@@ -204,7 +204,7 @@ router.post('/:user/stack/onyx', (req, res) => {
                                 if(err || foundrefree==null){console.log('error')}
                                 else{
                                     if(user.username!=foundrefree.username){
-                                    foundrefree.deposit= foundrefree.deposit + 2000
+                                    foundrefree.deposit= Number(foundrefree.deposit) + 2000
                                     foundrefree.save() }
                                 }
                             })
@@ -257,7 +257,7 @@ router.post('/:user/stack/sapphire', (req, res) => {
                                 if(err || foundrefree==null||user.username==foundrefree.username){console.log('error')}
                                 else{
                                     if(user.username!=foundrefree.username){
-                                    foundrefree.deposit= foundrefree.deposit + 3000
+                                    foundrefree.deposit= Number(foundrefree.deposit) + 3000
                                     foundrefree.save()}
                                 }
                             })
