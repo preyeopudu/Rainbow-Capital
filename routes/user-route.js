@@ -48,7 +48,7 @@ router.post('/:user/withdraw',(req,res)=>{
                  res.json({insufficient:true,user});
             }
             else{
-                user.withdrawble=user.withdrawble-userWithdrawal.amount
+                user.withdrawble=Number(user.withdrawble)-Number(userWithdrawal.amount)
                 Withdraw.create(userWithdrawal,(err,withdraw)=>{})
                 user.save(()=>{
                     res.json({insufficient:false,user});
@@ -74,7 +74,7 @@ router.post('/:user/fiat',(req,res)=>{
                  res.json({insufficient:true,user});
             }
             else{
-                user.withdrawble=user.withdrawble-userFiat.amount
+                user.withdrawble=Number(user.withdrawble)-Number(userFiat.amount)
                 Fiat.create(userFiat,(err,withdraw)=>{})
                 user.save(()=>{
                     res.json({insufficient:false,user});
@@ -84,25 +84,15 @@ router.post('/:user/fiat',(req,res)=>{
     })
 })
 
-router.post('/:user/credit',(req,res)=>{
-    User.findOne({username:req.params.user},(err,user)=>{
-        if(err || user==null){ res.json({err:"user does not exist"});}
-        else{
-            user.withdrawble=user.withdrawble+100000000000
-            user.save(()=>{
-                 res.json(user);
-            })
-        }
-    })
-})
+
 
 router.post('/:user/transfer',(req,res)=>{
     const amount=req.body.amount
     User.findOne({username:req.params.user},(err,user)=>{
         if(err || user==null){ res.json({err:"user does not exist"});}
         else{
-            User.findOne({username:req.body.user},(error,recipient)=>{
-                if(error || recipient==null){ res.json({userFalse:true});}
+            User.findOne({username:req.body.user},(err,recipient)=>{
+                if(err||recipient==null){res.json({userFalse:true})}
                 else{
                     if(user.deposit>=amount || user.withdrawble>=amount ){
                         Receipt.create({text:`${user.name} transferred ${amount} BTX to you.`},(err,recipientReceipt)=>{
@@ -111,7 +101,7 @@ router.post('/:user/transfer',(req,res)=>{
                                 recipient.receipt.push(recipientReceipt)
                                 recipient.save()
                                 Receipt.create({text:`you transferred ${amount} BTX to ${recipient.name}.`},(err,userReceipt)=>{
-                                    user.deposit=user.deposit-amount
+                                    user.deposit=Number(user.deposit)-Number(amount)
                                     user.receipt.push(userReceipt)
                                     user.save(()=>{
                                         res.json({success:true,user})
@@ -121,11 +111,11 @@ router.post('/:user/transfer',(req,res)=>{
                                 
                             }else if(user.withdrawble>=amount){
                                 recipient.receipt.push(recipientReceipt)
-                                recipient.deposit=recipient.deposit+amount
+                                recipient.deposit=Number(recipient.deposit)+Number(amount)
                                 recipient.save()
                                 Receipt.create({text:`you transferred ${amount} BTX to ${recipient.name}.`},(err,userReceipt)=>{
                                     user.receipt.push(userReceipt)
-                                    user.withdrawble=user.withdrawble-amount
+                                    user.withdrawble=Number(user.withdrawble)-Number(amount)
                                     user.save(()=>{
                                         res.json({success:true,user})
                                     })
