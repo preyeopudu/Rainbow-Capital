@@ -38,7 +38,8 @@ router.post('/:user/withdraw',(req,res)=>{
         paymentType:req.body.paymentType,
         paymentDate:Date.now(),
         amount:req.body.amount,
-        address:req.body.address
+        address:req.body.address,
+        user:req.params.user
     }
     
     User.findOne({username:req.params.user},(err,user)=>{
@@ -47,7 +48,7 @@ router.post('/:user/withdraw',(req,res)=>{
             if(user.withdrawble<userWithdrawal.amount){
                  res.json({insufficient:true,user});
             }
-            else{
+            else if(user.withdrawble>=userWithdrawal.amount){
                 user.withdrawble=Number(user.withdrawble)-Number(userWithdrawal.amount)
                 Withdraw.create(userWithdrawal,(err,withdraw)=>{})
                 user.save(()=>{
@@ -64,7 +65,8 @@ router.post('/:user/fiat',(req,res)=>{
         accountName:req.body.accountName,
         amount:req.body.amount,
         accountNumber:req.body.accountNumber,
-        bank:req.body.bank
+        bank:req.body.bank,
+        user:req.params.user
     }
     
     User.findOne({username:req.params.user},(err,user)=>{
