@@ -61,7 +61,7 @@ router.post('/auth/reset',async (req,res)=>{
         //     }
         // })
         User.findOne({username:req.body.username},(err,founduser)=>{
-            if(err){
+            if(err||founduser==null){
                  res.json({success:false});
             }
             else{
