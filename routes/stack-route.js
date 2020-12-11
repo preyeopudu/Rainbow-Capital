@@ -16,10 +16,10 @@ router.post('/:user/stack/emerald', (req, res) => {
             });
         }
         else{
-            if(user.stack.length>0){
+            if(user.stack.length===1 || user.stack.length>0){
                  res.json({active:true});
             }
-            else{
+            else if(user.stack.length===0){
                 if(user.deposit>=emerald.cost || user.withdrawble>=emerald.cost ){
                     Stack.create(emerald,(err,stack)=>{
                         if(user.deposit>=emerald.cost){
@@ -29,7 +29,7 @@ router.post('/:user/stack/emerald', (req, res) => {
                             user.withdrawble=user.withdrawble-emerald.cost
                         }
                         
-                        if(user.bonus===false){
+                        if(user.bonus===false){ 
                             User.findOne({username:user.referee},(err,foundrefree)=>{
                                 if(err || foundrefree==null){console.log('error')}
                                 else{
@@ -75,10 +75,10 @@ router.post('/:user/stack/ruby', (req, res) => {
             });
         }
         else{
-            if(user.stack.length>0){
+            if(user.stack.length===1 || user.stack.length>0){
                 res.json({active:true});
             }
-            else{
+            else if(user.stack.length===0){
                 if(user.deposit>=ruby.cost || user.withdrawble>=ruby.cost ){
                     
                     Stack.create(ruby,(err,stack)=>{
@@ -127,10 +127,10 @@ router.post('/:user/stack/beryl', (req, res) => {
             });
         }
         else{
-            if(user.stack.length>0){
+            if(user.stack.length===1 || user.stack.length>0){
                 res.json({active:true})
             }
-            else{
+            else if(user.stack.length===0){
                 
 
                 if(user.deposit>=beryl.cost || user.withdrawble>=beryl.cost ){
@@ -185,10 +185,10 @@ router.post('/:user/stack/onyx', (req, res) => {
             });
         }
         else{
-            if(user.stack.length>0){
+            if(user.stack.length===1 || user.stack.length>0){
                 res.json({active:true});
             }
-            else{
+            else if(user.stack.length===0){
                 if(user.deposit>=onyx.cost || user.withdrawble>=onyx.cost ){
                     
                     Stack.create(onyx,(err,stack)=>{
@@ -238,10 +238,10 @@ router.post('/:user/stack/sapphire', (req, res) => {
             });
         }
         else{
-            if(user.stack.length>0){
+            if(user.stack.length===1 || user.stack.length>0){
                 res.json({active:true});
             }
-            else{
+            else if(user.stack.length===0){
                 if(user.deposit>=sapphire.cost || user.withdrawble>=sapphire.cost ){
                     
                     Stack.create(sapphire,(err,stack)=>{
