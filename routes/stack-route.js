@@ -23,10 +23,10 @@ router.post('/:user/stack/emerald', (req, res) => {
                 if(user.deposit>=emerald.cost || user.withdrawble>=emerald.cost ){
                     Stack.create(emerald,(err,stack)=>{
                         if(user.deposit>=emerald.cost){
-                            user.deposit=user.deposit-emerald.cost
+                            user.deposit=Number(user.deposit)-emerald.cost
                         }
                         else if(user.withdrawble>=emerald.cost){
-                            user.withdrawble=user.withdrawble-emerald.cost
+                            user.withdrawble=Number(user.withdrawble)-emerald.cost
                         }
                         
                         if(user.bonus===false){ 
@@ -83,10 +83,10 @@ router.post('/:user/stack/ruby', (req, res) => {
                     
                     Stack.create(ruby,(err,stack)=>{
                         if(user.deposit>=ruby.cost){
-                            user.deposit=user.deposit-ruby.cost
+                            user.deposit=Number(user.deposit)-ruby.cost
                         }
                         else if(user.withdrawble>=ruby.cost){
-                            user.withdrawble=user.withdrawble-ruby.cost
+                            user.withdrawble=Number(user.withdrawble)-ruby.cost
                         }
                         user.stack.push(stack)
                         if(user.bonus===false){
@@ -193,7 +193,7 @@ router.post('/:user/stack/onyx', (req, res) => {
                     
                     Stack.create(onyx,(err,stack)=>{
                         if(user.deposit>=onyx.cost){
-                            user.deposit=user.deposit-onyx.cost
+                            user.deposit=Number(user.deposit)-Number(onyx.cost)
                         }
                         else if(user.withdrawble>=onyx.cost){
                             user.withdrawble=user.withdrawble-onyx.cost

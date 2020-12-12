@@ -52,20 +52,13 @@ router.post('/auth/logout', (req, res) => {
 router.post('/auth/reset',async (req,res)=>{
         
 
-        // User.findOne({username:req.body.username},(err,founduser)=>{
-        //     if(err){
-        //          res.json(err);
-        //     }
-        //     else{
-        //          res.json(founduser);
-        //     }
-        // })
+
         User.findOne({username:req.body.username},(err,founduser)=>{
-            if(err||founduser==null){
+            if(err||founduser===null){
                  res.json({success:false});
             }
             else{
-                if(req.body.secret== founduser.secret){
+                if(req.body.secret=== founduser.secret){
                     founduser.setPassword(req.body.password,(err)=>{
                         if(err){
                              res.json({success:false});
