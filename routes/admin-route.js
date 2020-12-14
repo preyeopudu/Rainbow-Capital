@@ -119,22 +119,35 @@ router.get('/fiat',isAdmin,(req,res)=>{
 
 router.post('/transfer/fiat/:id', (req, res) => {
     Fiat.findByIdAndDelete(req.params.id,(err)=>{
-        if(err){
-            console.log(err)
-        }else{
-             res.redirect('/fiat');
+        if(err){ res.json({error:err});}
+        else{
+              res.redirect('/fiat');
         }
     })
+    // Fiat.findByIdAndDelete(req.params.id,(err)=>{
+    //     if(err){
+    //         console.log(err)
+    //     }else{
+    //          res.redirect('/fiat');
+    //     }
+    // })
 });
 
 router.post('/transfer/:coin/:id',isAdmin,(req,res)=>{
-    Withdraw.findOneAndRemove({_id:req.params.id},(err)=>{
-        if(err){
-            console.log(err)
-        }else{
-               res.redirect(`/${req.params.coin}`);
-        }
+
+    Withdraw.findByIdAndDelete(req.params.id,(err)=>{
+            if(err){ console.log(err)}
+            else{
+                  res.redirect(`/${req.params.coin}`);;
+            }
     })
+    // Withdraw.findOneAndRemove({_id:req.params.id},(err)=>{
+    //     if(err){
+    //         console.log(err)
+    //     }else{
+    //            res.redirect(`/${req.params.coin}`);
+    //     }
+    // })
 })
 
 

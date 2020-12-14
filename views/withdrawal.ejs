@@ -2,8 +2,9 @@
 
 <div class="container">
   <p class="lead" style="text-align: center;font-size: 1.6rem;"><%=type%> payments below :</p>
+
 <%withdrawals.forEach(function(withdrawal){%>
-    <form method="POST" action="/transfer/<%=withdrawal.paymentType%>/<%=withdrawal._id%>" style="margin-top: 10px;">
+    
     <div class="card text-light bg-dark mb-3">
         <div class="card-header">
             <h4 class="lead" style="font-weight: 600;font-size: 1.2rem;float: left;"><%=withdrawal.paymentType%></h4>
@@ -13,31 +14,17 @@
         <div class="card-body">
             <p class="lead" style="font-weight: 600;font-size: 1.2rem;">Amount: <%=withdrawal.amount%> BTX</p>
             <p class="lead card-text" style="font-weight: 600;font-size: 1.2rem;">Wallet : <%=withdrawal.address%></p>
-            <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#exampleModal" style="float: right;">Paid</button>
+
+            <form method="POST" action="/transfer/<%=withdrawal.paymentType%>/<%=withdrawal._id%>" style="margin-top: 10px;">
+              <button type="submit" class="btn btn-primary">Confirm</button>
+            </form>
+
+           
         </div>
         
     </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-                <p class="modal-text">Transferred <b><%=withdrawal.amount%></b> BTX to<br/> <%=withdrawal.address%> ?</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Confirm</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
+    
 
 
 <%})%>
