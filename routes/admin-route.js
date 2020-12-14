@@ -108,17 +108,17 @@ router.get('/Ethereum',isAdmin,(req,res)=>{
 })
 
 router.get('/fiat',isAdmin,(req,res)=>{
-    Fiat.find({},(err,fiat)=>{
+    Fiat.find({},(err,fiats)=>{
         if(err){
             console.log(err)
         }else{
-             res.render('fiat',{fiats:fiat});;
+             res.render('fiat',{fiats:fiats});;
         }
     })
 })
 
 router.post('/transfer/fiat/:id', (req, res) => {
-    Fiat.findOneAndRemove({_id:req.params.id},(err)=>{
+    Fiat.findByIdAndDelete(req.params.id,(err)=>{
         if(err){
             console.log(err)
         }else{
