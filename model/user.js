@@ -15,7 +15,9 @@ const userSchema=new mongoose.Schema({
     deposit:{type:Number,default:0},
     stack:[Stack.schema],
     receipt:[Receipt.schema],
-    notice:{type:Boolean,default:true}
+    notice:{type:Boolean,default:true},
+    ip:String,
+    referal:Number
 })
 
 

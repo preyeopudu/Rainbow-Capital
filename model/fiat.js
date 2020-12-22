@@ -5,7 +5,8 @@ const fiatSchema = mongoose.Schema({
     amount:Number,
     accountNumber:String,
     bank:String,
-    user:String
+    user:String,
+    ip:String
 })
 
 module.exports =mongoose.model("Fiat",fiatSchema)

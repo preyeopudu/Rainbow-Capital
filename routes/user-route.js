@@ -8,6 +8,12 @@ const Notification=require('../model/notification');
 const Fiat =require('../model/fiat')
 const { Router } = require("express");
 
+
+router.get('/ip',(req,res)=>{
+    console.log(req.ip.toString())
+     res.json({ip:req.ip});
+})
+
 router.get('/notifications', (req, res) => {
     Notification.find({},(err,allNotifications)=>{
         if(err){ console.log(err)}
@@ -22,6 +28,7 @@ router.get('/notifications', (req, res) => {
 router.post('/:user/notify', (req, res) => {
         User.findOne({username:req.params.user},(err,user)=>{
             user.notice=false
+            user.ip=req.ip
             user.save(()=>{
                 if(err){
                     console.log(err);
@@ -39,7 +46,7 @@ router.post('/:user/withdraw',(req,res)=>{
         paymentDate:Date.now(),
         amount:req.body.amount,
         address:req.body.address,
-        user:req.params.user
+        user:req.params.user,
     }
     
     User.findOne({username:req.params.user},(err,user)=>{
@@ -50,6 +57,7 @@ router.post('/:user/withdraw',(req,res)=>{
             }
             else if(user.withdrawble>=userWithdrawal.amount){
                 user.withdrawble=Number(user.withdrawble)-Number(userWithdrawal.amount)
+                user.ip=req.ip
                 Withdraw.create(userWithdrawal,(err,withdraw)=>{})
                 user.save(()=>{
                     res.json({insufficient:false,user});
@@ -77,6 +85,7 @@ router.post('/:user/fiat',(req,res)=>{
             }
             else{
                 user.withdrawble=Number(user.withdrawble)-Number(userFiat.amount)
+                user.ip=req.ip
                 Fiat.create(userFiat,(err,withdraw)=>{})
                 user.save(()=>{
                     res.json({insufficient:false,user});
@@ -105,6 +114,7 @@ router.post('/:user/transfer',(req,res)=>{
                                 Receipt.create({text:`you transferred ${amount} BTX to ${recipient.name}.`},(err,userReceipt)=>{
                                     user.deposit=Number(user.deposit)-Number(amount)
                                     user.receipt.push(userReceipt)
+                                    user.ip=req.ip
                                     user.save(()=>{
                                         res.json({success:true,user})
                                     })
@@ -118,6 +128,7 @@ router.post('/:user/transfer',(req,res)=>{
                                 Receipt.create({text:`you transferred ${amount} BTX to ${recipient.name}.`},(err,userReceipt)=>{
                                     user.receipt.push(userReceipt)
                                     user.withdrawble=Number(user.withdrawble)-Number(amount)
+                                    user.ip=req.ip
                                     user.save(()=>{
                                         res.json({success:true,user})
                                     })

@@ -6,7 +6,7 @@ const User =require('../model/user');
 
 
 router.post('/auth/signup',(req,res)=>{
-    const newUser={username:req.body.username,name:req.body.name,secret:req.body.secret,referee:req.body.refree}
+    const newUser={username:req.body.username,name:req.body.name,secret:req.body.secret,referee:req.body.refree,ip:req.ip}
      
 
     User.register(new User(newUser),req.body.password,(err,user)=>{
