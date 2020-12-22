@@ -17,7 +17,7 @@ const userSchema=new mongoose.Schema({
     receipt:[Receipt.schema],
     notice:{type:Boolean,default:true},
     ip:String,
-    referal:Number
+    referal:{type:Number,default:0}
 })
 
 
