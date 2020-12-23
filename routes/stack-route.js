@@ -29,27 +29,28 @@ router.post('/:user/stack/emerald', (req, res) => {
                             user.withdrawble=Number(user.withdrawble)-emerald.cost
                         }
                         
-                        if(user.bonus===false){ 
+                        if(user.bonus==false){ 
                             User.findOne({username:user.referee},(err,foundrefree)=>{
                                 if(err || foundrefree==null){console.log('error')}
                                 else{
                                     if(user.username!=foundrefree.username){
-                                    foundrefree.referal=parseInt(foundrefree)+1
-                                    foundrefree.deposit=Number(foundrefree.deposit)  + 500
-                                    foundrefree.save()
+                                        foundrefree.referal=parseInt(foundrefree.referal)+1
+                                        foundrefree.deposit=Number(foundrefree.deposit)+500
+                                        console.log("referall bonus")
+                                        foundrefree.save(()=>{
+                                            console.log(foundrefree.username)
+                                        })
+                                        user.bonus= true
+                                        user.stack.push(stack)
+                                        user.save(()=>{res.json({user})})
                                     }
-                                    
                                 }
-                            })
+                            })}
 
+                       else if(user.bonus==true){
                             user.stack.push(stack)
-                            user.bonus= true
-                            user.save(()=>{
-                                res.json({user});
-                       })
-
-
-                        }
+                            user.bonus=true
+                       }
                        
                 })
                 }
@@ -88,24 +89,28 @@ router.post('/:user/stack/ruby', (req, res) => {
                         else if(user.withdrawble>=ruby.cost){
                             user.withdrawble=Number(user.withdrawble)-ruby.cost
                         }
-                        user.stack.push(stack)
-                        if(user.bonus===false){
+                        if(user.bonus==false){ 
                             User.findOne({username:user.referee},(err,foundrefree)=>{
                                 if(err || foundrefree==null){console.log('error')}
                                 else{
                                     if(user.username!=foundrefree.username){
-                                    foundrefree.referal=parseInt(foundrefree)+1
-                                    foundrefree.deposit= Number(foundrefree.deposit) + 1000
-                                    foundrefree.save()
-                                    console.log(foundrefree)}
-                                    
+                                        foundrefree.referal=parseInt(foundrefree.referal)+1
+                                        foundrefree.deposit=Number(foundrefree.deposit)+1000
+                                        console.log("referall bonus")
+                                        foundrefree.save(()=>{
+                                            console.log(foundrefree.username)
+                                        })
+                                        user.bonus= true
+                                        user.stack.push(stack)
+                                        user.save(()=>{res.json({user})})
+                                    }
                                 }
-                            })
-                        }
-                        user.bonus=true
-                        user.save(()=>{
-                             res.json({user});
-                    })
+                            })}
+
+                       else if(user.bonus==true){
+                            user.stack.push(stack)
+                            user.bonus=true
+                       }
                 })
                 }
                 else{
@@ -141,25 +146,28 @@ router.post('/:user/stack/beryl', (req, res) => {
                         else if(user.withdrawble>=beryl.cost){
                             user.withdrawble=user.withdrawble-beryl.cost
                         }
-                        if(user.bonus===false){
+                        if(user.bonus==false){ 
                             User.findOne({username:user.referee},(err,foundrefree)=>{
                                 if(err || foundrefree==null){console.log('error')}
                                 else{
                                     if(user.username!=foundrefree.username){
-                                    foundrefree.referal=parseInt(foundrefree)+1
-                                    foundrefree.deposit= Number(foundrefree.deposit) + 1500
-                                    console.log('duped')
-                                    foundrefree.save()
+                                        foundrefree.referal=parseInt(foundrefree.referal)+1
+                                        foundrefree.deposit=Number(foundrefree.deposit)+1500
+                                        console.log("referall bonus")
+                                        foundrefree.save(()=>{
+                                            console.log(foundrefree.username)
+                                        })
+                                        user.bonus= true
+                                        user.stack.push(stack)
+                                        user.save(()=>{res.json({user})})
                                     }
-                                    
                                 }
-                            })
-                        }
-                        user.stack.push(stack)
-                        user.bonus=true
-                        user.save(()=>{
-                             res.json({user});
-                    })
+                            })}
+
+                       else if(user.bonus==true){
+                            user.stack.push(stack)
+                            user.bonus=true
+                       }
                 })
                 }
 
@@ -200,21 +208,28 @@ router.post('/:user/stack/onyx', (req, res) => {
                             user.withdrawble=user.withdrawble-onyx.cost
                         }
                         user.stack.push(stack)
-                        if(user.bonus===false){
+                        if(user.bonus==false){ 
                             User.findOne({username:user.referee},(err,foundrefree)=>{
                                 if(err || foundrefree==null){console.log('error')}
                                 else{
                                     if(user.username!=foundrefree.username){
-                                    foundrefree.referal=parseInt(foundrefree)+1
-                                    foundrefree.deposit= Number(foundrefree.deposit) + 2000
-                                    foundrefree.save() }
+                                        foundrefree.referal=parseInt(foundrefree.referal)+1
+                                        foundrefree.deposit=Number(foundrefree.deposit)+2000
+                                        console.log("referall bonus")
+                                        foundrefree.save(()=>{
+                                            console.log(foundrefree.username)
+                                        })
+                                        user.bonus= true
+                                        user.stack.push(stack)
+                                        user.save(()=>{res.json({user})})
+                                    }
                                 }
-                            })
-                        }
-                        user.bonus=true
-                        user.save(()=>{
-                             res.json({user});
-                    })
+                            })}
+
+                       else if(user.bonus==true){
+                            user.stack.push(stack)
+                            user.bonus=true
+                       }
                 })
                 }
 
@@ -253,23 +268,28 @@ router.post('/:user/stack/sapphire', (req, res) => {
                         else if(user.withdrawble>=sapphire.cost){
                             user.withdrawble=user.withdrawble-sapphire.cost
                         }
-                        user.stack.push(stack)
-                        if(user.bonus===false){
+                        if(user.bonus==false){ 
                             User.findOne({username:user.referee},(err,foundrefree)=>{
-                                if(err || foundrefree==null||user.username==foundrefree.username){console.log('error')}
+                                if(err || foundrefree==null){console.log('error')}
                                 else{
                                     if(user.username!=foundrefree.username){
-                                    foundrefree.referal=parseInt(foundrefree)+1
-                                    foundrefree.deposit= Number(foundrefree.deposit) + 3000
-                                    foundrefree.save()}
+                                        foundrefree.referal=parseInt(foundrefree.referal)+1
+                                        foundrefree.deposit=Number(foundrefree.deposit)+3000
+                                        console.log("referall bonus")
+                                        foundrefree.save(()=>{
+                                            console.log(foundrefree.username)
+                                        })
+                                        user.bonus= true
+                                        user.stack.push(stack)
+                                        user.save(()=>{res.json({user})})
+                                    }
                                 }
-                            })
-                        }
+                            })}
 
-                        user.bonus=true
-                        user.save(()=>{
-                             res.json({user});
-                    })
+                       else if(user.bonus==true){
+                            user.stack.push(stack)
+                            user.bonus=true
+                       }
                 })
                 }
 
