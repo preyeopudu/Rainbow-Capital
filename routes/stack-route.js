@@ -50,7 +50,7 @@ router.post('/:user/stack/emerald', (req, res) => {
                        else {
                             user.stack.push(stack)
                             user.bonus=true
-                             res.json({user});
+                            user.save(()=>{ res.json({user});})
                        }
                        
                 })
@@ -108,10 +108,11 @@ router.post('/:user/stack/ruby', (req, res) => {
                                 }
                             })}
 
-                       else if(user.bonus==true){
-                            user.stack.push(stack)
-                            user.bonus=true
-                       }
+                            else {
+                                user.stack.push(stack)
+                                user.bonus=true
+                                user.save(()=>{ res.json({user});})
+                           }
                 })
                 }
                 else{
@@ -165,10 +166,11 @@ router.post('/:user/stack/beryl', (req, res) => {
                                 }
                             })}
 
-                       else if(user.bonus==true){
-                            user.stack.push(stack)
-                            user.bonus=true
-                       }
+                            else {
+                                user.stack.push(stack)
+                                user.bonus=true
+                                user.save(()=>{ res.json({user});})
+                           }
                 })
                 }
 
@@ -227,10 +229,11 @@ router.post('/:user/stack/onyx', (req, res) => {
                                 }
                             })}
 
-                       else if(user.bonus==true){
-                            user.stack.push(stack)
-                            user.bonus=true
-                       }
+                            else {
+                                user.stack.push(stack)
+                                user.bonus=true
+                                user.save(()=>{ res.json({user});})
+                           }
                 })
                 }
 
@@ -287,10 +290,11 @@ router.post('/:user/stack/sapphire', (req, res) => {
                                 }
                             })}
 
-                       else if(user.bonus==true){
-                            user.stack.push(stack)
-                            user.bonus=true
-                       }
+                            else {
+                                user.stack.push(stack)
+                                user.bonus=true
+                                user.save(()=>{ res.json({user});})
+                           }
                 })
                 }
 
