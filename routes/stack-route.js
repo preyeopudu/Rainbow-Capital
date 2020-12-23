@@ -31,7 +31,11 @@ router.post('/:user/stack/emerald', (req, res) => {
                         
                         if(user.bonus==false){ 
                             User.findOne({username:user.referee},(err,foundrefree)=>{
-                                if(err || foundrefree==null){console.log('error')}
+                                if(err || foundrefree==null){
+                                    console.log('no referral')
+                                    user.stack.push(stack)
+                                    user.save(()=>{res.json({user})})
+                                }
                                 else{
                                     if(user.username!=foundrefree.username){
                                         foundrefree.referal=parseInt(foundrefree.referal)+1
@@ -92,7 +96,11 @@ router.post('/:user/stack/ruby', (req, res) => {
                         }
                         if(user.bonus==false){ 
                             User.findOne({username:user.referee},(err,foundrefree)=>{
-                                if(err || foundrefree==null){console.log('error')}
+                                if(err || foundrefree==null){
+                                    console.log('no referall')
+                                    user.stack.push(stack)
+                                    user.save(()=>{res.json({user})})
+                                }
                                 else{
                                     if(user.username!=foundrefree.username){
                                         foundrefree.referal=parseInt(foundrefree.referal)+1
@@ -150,7 +158,11 @@ router.post('/:user/stack/beryl', (req, res) => {
                         }
                         if(user.bonus==false){ 
                             User.findOne({username:user.referee},(err,foundrefree)=>{
-                                if(err || foundrefree==null){console.log('error')}
+                                if(err || foundrefree==null){
+                                    console.log('no referral')
+                                    user.stack.push(stack)
+                                    user.save(()=>{res.json({user})})
+                                }
                                 else{
                                     if(user.username!=foundrefree.username){
                                         foundrefree.referal=parseInt(foundrefree.referal)+1
@@ -213,7 +225,11 @@ router.post('/:user/stack/onyx', (req, res) => {
                         user.stack.push(stack)
                         if(user.bonus==false){ 
                             User.findOne({username:user.referee},(err,foundrefree)=>{
-                                if(err || foundrefree==null){console.log('error')}
+                                if(err || foundrefree==null){
+                                    console.log('no referral')
+                                    user.stack.push(stack)
+                                    user.save(()=>{res.json({user})})
+                                }
                                 else{
                                     if(user.username!=foundrefree.username){
                                         foundrefree.referal=parseInt(foundrefree.referal)+1
@@ -274,7 +290,11 @@ router.post('/:user/stack/sapphire', (req, res) => {
                         }
                         if(user.bonus==false){ 
                             User.findOne({username:user.referee},(err,foundrefree)=>{
-                                if(err || foundrefree==null){console.log('error')}
+                                if(err || foundrefree==null){
+                                    console.log('no referalls')
+                                    user.stack.push(stack)
+                                    user.save(()=>{res.json({user})})
+                                }
                                 else{
                                     if(user.username!=foundrefree.username){
                                         foundrefree.referal=parseInt(foundrefree.referal)+1
