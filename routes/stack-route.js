@@ -47,9 +47,10 @@ router.post('/:user/stack/emerald', (req, res) => {
                                 }
                             })}
 
-                       else if(user.bonus==true){
+                       else {
                             user.stack.push(stack)
                             user.bonus=true
+                             res.json({user});
                        }
                        
                 })
