@@ -1,0 +1,36 @@
+<%- include ('./partials/header');%>
+
+<div class="container-fluid">
+    
+    <div class="row">
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4">
+            <form action="admin/reset" method="POST" style="margin-top: 50px;">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Users Email</label>
+                  <input type="email" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+                <div class="form-group" style="margin-top: 30px;" >
+                    <label for="btx">New Password</label>
+                    <input type="text" name="password" class="form-control">
+                  </div>
+                <button  type="submit" class="btn btn-dark btn-block" data-toggle="modal" data-target="#exampleModal">Reset</button>
+
+                
+              </form>
+        </div>
+        <div class="col-md-4">
+
+        </div>
+    </div>
+
+    
+  
+</div>
+
+
+
+
+<%- include ('./partials/footer');%>
