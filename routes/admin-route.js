@@ -62,6 +62,37 @@ router.get('/transfer',isAdmin,(req,res)=>{
     res.render('transfer');
 })
 
+router.get('/reset',isAdmin,(req,res)=>{
+    res.render('reset');
+})
+
+
+router.post('/admin/reset',isAdmin,(req,res)=>{
+        User.findOne({username:req.body.username},(err,founduser)=>{
+            if(err||founduser===null){
+                req.flash("error","User does not exist")
+                 res.redirect('/reset');
+            }
+            else{
+                    founduser.setPassword(req.body.password,(err)=>{
+                        if(err){
+                            req.flash("error","failed to reset please retry")
+                            res.redirect('/reset');
+                            
+                        }
+                        else{
+                            founduser.save(()=>{
+                                req.flash("success","Reset Successful")
+                                res.redirect('/reset');
+                               
+                            })
+                             
+                        }
+                    })
+            }
+        })
+})
+
 
 router.post('/transfer',isAdmin,(req,res)=>{
   
