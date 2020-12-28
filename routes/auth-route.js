@@ -49,32 +49,32 @@ router.post('/auth/logout', (req, res) => {
      });
 });
 
-router.post('/auth/reset',async (req,res)=>{
+// router.post('/auth/reset',async (req,res)=>{
         
 
 
-        User.findOne({username:req.body.username},(err,founduser)=>{
-            if(err||founduser===null){
-                 res.json({success:false});
-            }
-            else{
-                if(req.body.secret=== founduser.secret){
-                    founduser.setPassword(req.body.password,(err)=>{
-                        if(err){
-                             res.json({success:false});
-                        }
-                        else{
-                            founduser.save()
-                             res.json({success:true})
-                        }
-                    })
-                }
-                else{
-                     res.json({success:false});
-                }
-            }
-        })
-})
+//         User.findOne({username:req.body.username},(err,founduser)=>{
+//             if(err||founduser===null){
+//                  res.json({success:false});
+//             }
+//             else{
+//                 if(req.body.secret=== founduser.secret){
+//                     founduser.setPassword(req.body.password,(err)=>{
+//                         if(err){
+//                              res.json({success:false});
+//                         }
+//                         else{
+//                             founduser.save()
+//                              res.json({success:true})
+//                         }
+//                     })
+//                 }
+//                 else{
+//                      res.json({success:false});
+//                 }
+//             }
+//         })
+// })
 
 
 
