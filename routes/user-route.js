@@ -9,11 +9,6 @@ const Fiat =require('../model/fiat')
 const { Router } = require("express");
 
 
-router.get('/ip',(req,res)=>{
-    console.log(req.ip.toString())
-     res.json({ip:req.ip});
-})
-
 router.get('/notifications', (req, res) => {
     Notification.find({},(err,allNotifications)=>{
         if(err){ console.log(err)}
@@ -108,15 +103,15 @@ router.post('/:user/transfer',(req,res)=>{
                     if(user.deposit>=amount || user.withdrawble>=amount ){
                         Receipt.create({text:`${user.name} transferred ${amount} BTX to you.`},(err,recipientReceipt)=>{
                             if(user.deposit>=amount){
-                                recipient.deposit=Number(recipient.deposit)+Number(amount)
-                                recipient.receipt.push(recipientReceipt)
-                                recipient.save()
                                 Receipt.create({text:`you transferred ${amount} BTX to ${recipient.name}.`},(err,userReceipt)=>{
                                     user.deposit=Number(user.deposit)-Number(amount)
                                     user.receipt.push(userReceipt)
                                     user.ip=req.ip
                                     user.save(()=>{
                                         res.json({success:true,user})
+                                        recipient.deposit=Number(recipient.deposit)+Number(amount)
+                                        recipient.receipt.push(recipientReceipt)
+                                        recipient.save()
                                     })
                                 })
                                 
