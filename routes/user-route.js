@@ -98,7 +98,7 @@ router.post('/:user/transfer',(req,res)=>{
         if(err || user==null){ res.json({err:"user does not exist"});}
         else{
             User.findOne({username:req.body.user},(err,recipient)=>{
-                if(err||recipient==null||user===recipient){res.json({userFalse:true})}
+                if(err||recipient==null||req.params.user===recipient){res.json({userFalse:true})}
                 else{
                     if(user.deposit>=amount || user.withdrawble>=amount ){
                         Receipt.create({text:`${user.name} transferred ${amount} BTX to you.`},(err,recipientReceipt)=>{
