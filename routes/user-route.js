@@ -117,15 +117,15 @@ router.post('/:user/transfer',(req,res)=>{
                                 
                                 
                             }else if(user.withdrawble>=amount){
-                                recipient.receipt.push(recipientReceipt)
-                                recipient.deposit=Number(recipient.deposit)+Number(amount)
-                                recipient.save()
                                 Receipt.create({text:`you transferred ${amount} BTX to ${recipient.name}.`},(err,userReceipt)=>{
                                     user.receipt.push(userReceipt)
                                     user.withdrawble=Number(user.withdrawble)-Number(amount)
                                     user.ip=req.headers['x-forwarded-for']
                                     user.save(()=>{
                                         res.json({success:true,user})
+                                        recipient.receipt.push(recipientReceipt)
+                                        recipient.deposit=Number(recipient.deposit)+Number(amount)
+                                        recipient.save()
                                     })
                                 })
                             }
