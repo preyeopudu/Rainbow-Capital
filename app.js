@@ -75,7 +75,7 @@ app.get('/:user', (req, res) => {
             const userStack=user.stack
             ///check if user is currently on a plan //
             if(user.stack.length>1){
-                user,stack.pop()
+                user.stack.pop()
                 user.save(()=>{
                      res.json({stack:true,user:user});
                 })
