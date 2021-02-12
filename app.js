@@ -5,8 +5,11 @@ const app = express()
 const mongoose = require('mongoose');
 app.use(cors())
 
-const uri= 'mongodb://localhost:27017/btx'
-// const uri = 'mongodb+srv://opudupreye:5gr3gF4YVD5F6K2b@billiontraderx.bxlns.mongodb.net/<billiontraderx>?retryWrites=true&w=majority'
+// const uri= 'mongodb://localhost:27017/btx'
+
+const uri = 'mongodb+srv://opudupreye:5gr3gF4YVD5F6K2b@billiontraderx.bxlns.mongodb.net/<billiontraderx>?retryWrites=true&w=majority'
+
+
 mongoose.connect(uri, {useNewUrlParser: true,useUnifiedTopology: true})
 .then(() => {
   console.log('MongoDB Connected…')
@@ -97,11 +100,15 @@ app.get('/:user', (req, res) => {
              else{
                  if(user.stack.length>1){
                      user.stack.pop()
+                     user.save()
+                      res.json({user});
+                 }else{
+                    res.json({
+                        stack:false,
+                        user:user
+                    });
                  }
-                  res.json({
-                      stack:false,
-                      user:user
-                  });
+                  
              }
         }
     })
