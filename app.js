@@ -5,8 +5,8 @@ const app = express()
 const mongoose = require('mongoose');
 app.use(cors())
 
-// const uri= 'mongodb://localhost:27017/btx's
-const uri = 'mongodb+srv://opudupreye:5gr3gF4YVD5F6K2b@billiontraderx.bxlns.mongodb.net/<billiontraderx>?retryWrites=true&w=majority';
+const uri= 'mongodb://localhost:27017/btx'
+// const uri = 'mongodb+srv://opudupreye:5gr3gF4YVD5F6K2b@billiontraderx.bxlns.mongodb.net/<billiontraderx>?retryWrites=true&w=majority'
 mongoose.connect(uri, {useNewUrlParser: true,useUnifiedTopology: true})
 .then(() => {
   console.log('MongoDB Connected…')
@@ -73,14 +73,13 @@ app.get('/:user', (req, res) => {
         else{
             const userStack=user.stack
             ///check if user is currently on a plan //
-             if(userStack.length>0){
+             if(user.stack.length>0){
                 const today= new Date()
-                const matureDate=userStack[0].matureDate
+                const matureDate=user.stack[0].matureDate
                  if(today >= matureDate){
-                     Stack.findOneAndDelete({_id:userStack[0]._id},(err)=>{
-                         user.withdrawble=Number(user.withdrawble)+Number(userStack[0].return)
+                     Stack.findOneAndDelete({_id:user.stack[0]._id},(err)=>{
+                         user.withdrawble=Number(user.withdrawble)+Number(user.stack[0].return)
                          user.stack.pop()
-
                          user.save((err)=>{
                              if(err){
                                   console.log({message:"not saved"});
@@ -96,6 +95,9 @@ app.get('/:user', (req, res) => {
              }
 
              else{
+                 if(user.stack.length>1){
+                     user.stack.pop()
+                 }
                   res.json({
                       stack:false,
                       user:user
