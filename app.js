@@ -62,7 +62,7 @@ app.use(stackRoutes,cors());
 app.use(adminRoutes,cors());
 app.use(userRoutes,cors());
 
-app.get('/:user', (req, res) => {
+app.get('/:user', async(req, res) => {
     const founduser =req.params.user
     User.findOne({username:founduser},(err,user)=>{
         if(err || user == null){
@@ -84,18 +84,22 @@ app.get('/:user', (req, res) => {
              else if(user.stack.length>0){
                 const today= new Date()
                 const matureDate=user.stack[0].matureDate
-                 if(today >= matureDate){
-                     Stack.findOneAndDelete({_id:user.stack[0]._id},(err)=>{
-                         user.withdrawble=Number(user.withdrawble)+Number(user.stack[0].return)
-                         user.stack.pop()
-                         user.save((err)=>{
-                             if(err){
-                                  console.log({message:"not saved"});
-                             }
-                             else{
-                                 res.json({stack:true,user:user})
-                             }
-                         })
+                 if(today>=matureDate){
+                     await Stack.findOneAndDelete({_id:user.stack[0]._id},(err)=>{
+                         if(err){
+                             console.log('An error occurred during returns')
+                         }else{
+                            user.withdrawble=Number(user.withdrawble)+Number(userStack.return)
+                            await user.stack.pop()
+                            await user.save((err)=>{
+                                if(err){
+                                     console.log({message:"not saved"});
+                                }
+                                else{
+                                    res.json({user:user})
+                                }
+                            })
+                         }
                      })
                  }else{
                     res.json({stack:true,user:user})
