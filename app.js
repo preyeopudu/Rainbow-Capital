@@ -90,10 +90,11 @@ app.get('/:user', async(req, res) => {
                              console.log('An error occurred during returns')
                          }else{
                             user.withdrawble=Number(user.withdrawble)+Number(userStack.return)
-                           user.stack.pop()
+                            user.stack.pop()
                             user.save((err)=>{
                                 if(err){
                                      console.log({message:"not saved"});
+                                     console.log(err)
                                 }
                                 else{
                                     res.json({user:user})
