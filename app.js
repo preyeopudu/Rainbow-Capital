@@ -85,13 +85,13 @@ app.get('/:user', async(req, res) => {
                 const today= new Date()
                 const matureDate=user.stack[0].matureDate
                  if(today>=matureDate){
-                     await Stack.findOneAndDelete({_id:user.stack[0]._id},(err)=>{
+                     Stack.findOneAndDelete({_id:user.stack[0]._id},(err)=>{
                          if(err){
                              console.log('An error occurred during returns')
                          }else{
                             user.withdrawble=Number(user.withdrawble)+Number(userStack.return)
-                            await user.stack.pop()
-                            await user.save((err)=>{
+                           user.stack.pop()
+                            user.save((err)=>{
                                 if(err){
                                      console.log({message:"not saved"});
                                 }
