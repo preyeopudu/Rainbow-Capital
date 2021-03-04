@@ -7,17 +7,38 @@ const userSchema=new mongoose.Schema({
     
     username:String,
     name:String,
-    secret:String,
-    referee:String,
-    bonus:{type:Boolean,default:false},
-    message:Boolean,
+    referee:String,//User who referred you
+
+
     withdrawble:{type:Number,default:0},
     deposit:{type:Number,default:0},
+    lockedFund:{type:Number,default:0},
+    referalAmount:{type:Number,default:0},//amount gained from referal
+
+    adPoint:{type:Number,default:0},
+    bonus:{type:Boolean,default:false},//referal bonus
+
+
     stack:[Stack.schema],
     receipt:[Receipt.schema],
+    people:[Object],//array of people referred
+
+
+    message:Boolean,
+    referal:{type:Number,default:0},//amount of people reffered
     notice:{type:Boolean,default:true},
-    ip:String,
-    referal:{type:Number,default:0}
+    shared:{type:Boolean,default:false},
+
+
+
+    ip:String,//ip address of user
+    previous:{type:Number,default:0},//previous user plan
+    secretCode:String//
+    
+    
+
+    
+    
 })
 
 

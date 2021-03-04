@@ -7,6 +7,8 @@ const Withdraw =require('../model/withdraw')
 const Notification=require('../model/notification');
 const Receipt=require('../model/receipt');
 const Fiat =require('../model/fiat')
+const Point=require('../model/points')
+const Ad=require('../model/ad');
 
 
 // User.register(new User({username:"admin"}),"@Billiontraderx2020")
@@ -46,7 +48,7 @@ router.get('/admin/notifications',isAdmin,(req,res)=>{
 
 
 router.post('/admin/notifications',isAdmin,(req,res)=>{
-    User.update({"notice":false}, {"$set":{"notice": true}}, {"multi": true}, (err, writeResult) => {});
+    User.updateMany({"notice":false},{"notice": true},(err, writeResult) => {console.log(writeResult)});
     Notification.create({title:req.body.title,text:req.body.text},(err,notification)=>{
         if(err){
             console.log(err)
@@ -55,6 +57,31 @@ router.post('/admin/notifications',isAdmin,(req,res)=>{
              res.redirect('/admin/notifications')
         }
     })
+})
+
+
+router.get('/admin/ads', (req, res) => {
+        res.render('ad')
+});
+
+
+
+router.post('/admin/ads',isAdmin,(req,res)=>{
+    User.updateMany({"shared":true},{"shared": false},(err, writeResult) => {console.log(writeResult)})
+    Ad.findOneAndDelete({},(err)=>{
+        if(err){console.log(err)}
+        else{
+            Ad.create({title:req.body.title,content:req.body.text},(err,ad)=>{
+                if(err){
+                    console.log(err)
+                }else{
+                    console.log(ad)
+                    req.flash("success","Ad post has been sent")
+                     res.redirect('/admin/ads')
+                }
+            })
+        }   
+    })  
 })
 
 
@@ -147,6 +174,28 @@ router.get('/fiat',isAdmin,(req,res)=>{
         }
     })
 })
+
+
+router.get('/point',isAdmin,(req,res)=>{
+    Point.find({},(err,points)=>{
+        if(err){
+            console.log(err)
+        }else{
+             res.render('point',{points:points});;
+        }
+    })
+})
+
+
+router.post('/transfer/point/:id', (req, res) => {
+    Point.findByIdAndDelete(req.params.id,(err)=>{
+        if(err){ res.json({error:err});}
+        else{
+              res.redirect('/point');
+        }
+    })
+})
+
 
 router.post('/transfer/fiat/:id', (req, res) => {
     Fiat.findByIdAndDelete(req.params.id,(err)=>{

@@ -6,6 +6,8 @@ const Withdraw =require('../model/withdraw')
 const Receipt=require('../model/receipt')
 const Notification=require('../model/notification');
 const Fiat =require('../model/fiat')
+const Ad=require('../model/ad');
+const Point=require('../model/points')
 const { Router } = require("express");
 
 
@@ -18,6 +20,15 @@ router.get('/notifications', (req, res) => {
          
     })
 });
+
+router.get('/ads',(req,res)=>{
+    Ad.find({},(err,ad)=>{
+        if(err){console.log(err)}
+        else{
+             res.json({ad:ad});
+        }
+    })
+})
 
 
 router.post('/:user/notify', (req, res) => {
@@ -43,7 +54,7 @@ router.post('/:user/withdraw',(req,res)=>{
         address:req.body.address,
         user:req.params.user,
     }
-    
+    console.log(userWithdrawal)
     User.findOne({username:req.params.user},(err,user)=>{
         if(err || user==null){ res.json({err:"user does not exist"});}
         else{
@@ -53,9 +64,20 @@ router.post('/:user/withdraw',(req,res)=>{
             else if(user.withdrawble>=userWithdrawal.amount){
                 user.withdrawble=Number(user.withdrawble)-Number(userWithdrawal.amount)
                 user.ip=req.headers['x-forwarded-for']
-                Withdraw.create(userWithdrawal,(err,withdraw)=>{})
-                user.save(()=>{
-                    res.json({insufficient:false,user});
+                Withdraw.create(userWithdrawal,(err,withdraw)=>{
+                    if(err){console.log(err)}
+                    else{
+                        console.log(withdraw)
+                    }
+                    })
+                user.save((err)=>{
+                    if(err){
+                        res.json({insufficient:true,user})
+                    }else{
+                        
+                        res.json({insufficient:false,user});
+                    }
+                    
                 }) 
             }
         }
@@ -71,7 +93,7 @@ router.post('/:user/fiat',(req,res)=>{
         bank:req.body.bank,
         user:req.params.user
     }
-    
+    console.log(userFiat)
     User.findOne({username:req.params.user},(err,user)=>{
         if(err || user==null){ res.json({err:"user does not exist"});}
         else{
@@ -82,8 +104,45 @@ router.post('/:user/fiat',(req,res)=>{
                 user.withdrawble=Number(user.withdrawble)-Number(userFiat.amount)
                 user.ip=req.headers['x-forwarded-for']
                 Fiat.create(userFiat,(err,withdraw)=>{})
-                user.save(()=>{
-                    res.json({insufficient:false,user});
+                user.save((err)=>{
+                    if(err){
+                        console.log(err)
+                        res.json({insufficient:true,user})
+                    }
+                    else{
+                    console.log(userFiat)
+                    res.json({insufficient:false,user});}
+                }) 
+            }
+        }
+    })
+})
+
+router.post('/:user/point',(req,res)=>{
+    const userAd={
+        accountName:req.body.accountName,
+        amount:req.body.amount,
+        username:req.params.user
+    }
+    console.log(userAd)
+    User.findOne({username:req.params.user},(err,user)=>{
+        if(err || user==null){ res.json({err:"user does not exist"});}
+        else{
+            if(user.adPoint<userAd.amount){
+                 res.json({insufficient:true,user});
+            }
+            else{
+                user.adPoint=Number(user.adPoint)-Number(userAd.amount)
+                user.ip=req.headers['x-forwarded-for']
+                Point.create(userAd,(err,withdraw)=>{})
+                user.save((err)=>{
+                    if(err){
+                        console.log(err)
+                        res.json({insufficient:true,user})
+                    }
+                    else{
+                    console.log(userAd)
+                    res.json({insufficient:false,user});}
                 }) 
             }
         }
@@ -107,11 +166,14 @@ router.post('/:user/transfer',(req,res)=>{
                                     user.deposit=Number(user.deposit)-Number(amount)
                                     user.receipt.push(userReceipt)
                                     user.ip=req.headers['x-forwarded-for']
-                                    user.save(()=>{
+                                    user.save((err)=>{
+                                        if(err){
+                                            res.json({success:false})
+                                        }else{
                                         res.json({success:true,user})
                                         recipient.deposit=Number(recipient.deposit)+Number(amount)
                                         recipient.receipt.push(recipientReceipt)
-                                        recipient.save()
+                                        recipient.save()}
                                     })
                                 })
                                 
@@ -135,10 +197,57 @@ router.post('/:user/transfer',(req,res)=>{
                 }
             })
         }
-    })
+    }) 
 })
 
 
+router.post('/:user/ad',(req,res)=>{
+    User.findOne({username:req.params.user},(err,user)=>{
+        if(err){
+            console.log("an error occured user-routes 144")
+        }
+        else{
+            if(user.shared===false){
+                user.adPoint=Number(user.adPoint)+20
+                user.shared=true
+                user.save(err=>{
+                    if(err){console.log(err)}
+                    
+                    else{
+                        console.log(user)
+                         res.json({user})
+                        }
+                })
+
+            }else{
+                 res.json({user});
+            }
+        }
+})
+})
+
+router.post('/:user/secret', (req, res) => {
+    const secret=req.body.secretuser
+    console.log(`your secret is ${secret}`)
+    User.findOne({username:req.params.user},(err,user)=>{
+        if(err){
+             res.json({success:false});
+        }else{
+             user.secretCode=secret
+             user.save((err)=>{
+                 if(err){
+                     console.log(err)
+                    res.json({success:false})
+                 }
+                 else{
+                     console.log(user.secret)
+                    res.json({user})
+                    
+                 }
+             })
+        }
+    })
+});
 
 
-module.exports = router  
+module.exports=router  

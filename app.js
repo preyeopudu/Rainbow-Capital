@@ -60,7 +60,7 @@ app.use(function(req,res,next){
 app.use(authRoutes,cors());
 app.use(stackRoutes,cors());
 app.use(adminRoutes,cors());
-app.use(userRoutes,cors());
+app.use(userRoutes,cors()); 
 
 app.get('/:user', async(req, res) => {
     const founduser =req.params.user
@@ -90,7 +90,7 @@ app.get('/:user', async(req, res) => {
                              console.log('An error occurred during returns')
                          }else{
                             user.previous=userStack[0].cost
-                            user.withdrawble=Number(user.withdrawble)+Number(userStack[0].return)
+                            user.lockedFund=Number(user.lockedFund)+Number(userStack[0].return)
                             user.stack.pop()
                             user.save((err)=>{
                                 if(err){
@@ -119,7 +119,6 @@ app.get('/:user', async(req, res) => {
     })
 
 });
-
 
 
 

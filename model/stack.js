@@ -7,8 +7,6 @@ const stackSchema = mongoose.Schema({
     matureDate:Date,
     cost:Number,
     return:Number,
-    isActive:Boolean,
-    isMatured:Boolean
 })
 //
 
