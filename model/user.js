@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const passportLocalMongoose=require('passport-local-mongoose')
 const Receipt = require('./receipt')
-const Stack= require('./stack')
+const Plan= require('./plan')
+const Referal=require('./referal')
 
 const userSchema=new mongoose.Schema({
     
@@ -9,23 +10,22 @@ const userSchema=new mongoose.Schema({
     name:String,
     referee:String,//User who referred you
 
-
-    withdrawble:{type:Number,default:0},
+    //wallets
+    interest:{type:Number,default:0},
     deposit:{type:Number,default:0},
     lockedFund:{type:Number,default:0},
-    referalAmount:{type:Number,default:0},//amount gained from referal
+    referalEarnings:{type:Number,default:0},
 
-    adPoint:{type:Number,default:0},
-    bonus:{type:Boolean,default:false},//referal bonus
+    
+    isReferred:{type:Boolean,default:false},
+    referee:String,
 
-
-    stack:[Stack.schema],
+    plan:[Plan.schema],
     receipt:[Receipt.schema],
-    people:[Object],//array of people referred
-
+    referals:[Referal.schema],
 
     message:Boolean,
-    referal:{type:Number,default:0},//amount of people reffered
+    bonus:{type:Boolean,default:false},
     notice:{type:Boolean,default:true},
     shared:{type:Boolean,default:false},
 
@@ -33,7 +33,7 @@ const userSchema=new mongoose.Schema({
 
     ip:String,//ip address of user
     previous:{type:Number,default:0},//previous user plan
-    secretCode:String//
+    secretCode:String
     
     
 

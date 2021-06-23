@@ -5,23 +5,25 @@ const passport = require("passport");
 const User =require('../model/user');
 const Withdraw =require('../model/withdraw')
 const Notification=require('../model/notification');
-const Receipt=require('../model/receipt');
 const Fiat =require('../model/fiat')
 const Point=require('../model/points')
 const Ad=require('../model/ad');
+const Bill=require('../model/bill')
+const Coupon=require('../model/coupon')
+const Crypto=require('../model/crypto')
 
 
-// User.register(new User({username:"admin"}),"@Billiontraderx2020")
+// User.register(new User({username:"RainbowMen"}),"@RainbowCapitals2021")
 
 function isAdmin(req,res,next){
-    if(req.isAuthenticated()&&req.user.username=="admin"){
+    if(req.isAuthenticated()&&req.user.username=="RainbowMen"){
         return next()
     }
      res.redirect('/admin/login');
 }
 
 router.get('/admin/login', (req, res) => {
-    res.render('login');
+    res.render('./admin/login');
 });
 
 router.get('/admin/logout',(req,res)=>{
@@ -37,13 +39,10 @@ router.post('/admin/login',passport.authenticate("local",{
     res.redirect('/transfer')
 });
 
-router.get('/',(req,res)=>{
-    res.render('home');
-})
 
 
 router.get('/admin/notifications',isAdmin,(req,res)=>{
-    res.render('notification');
+    res.render('./admin/notification');
 })
 
 
@@ -61,7 +60,7 @@ router.post('/admin/notifications',isAdmin,(req,res)=>{
 
 
 router.get('/admin/ads', (req, res) => {
-        res.render('ad')
+        res.render('./admin/ad')
 });
 
 
@@ -86,81 +85,52 @@ router.post('/admin/ads',isAdmin,(req,res)=>{
 
 
 router.get('/transfer',isAdmin,(req,res)=>{
-    res.render('transfer');
+    res.render('./admin/transfer');
 })
+
+router.get('/coupon',isAdmin,(req, res) => {
+        res.render('./admin/coupon');
+});
 
 router.get('/reset',isAdmin,(req,res)=>{
     res.render('reset');
 })
 
 
-router.post('/admin/reset',isAdmin,(req,res)=>{
-        User.findOne({username:req.body.username},(err,founduser)=>{
-            if(err||founduser===null){
-                req.flash("error","User does not exist")
-                 res.redirect('/reset');
-            }
-            else{
-                    founduser.setPassword(req.body.password,(err)=>{
-                        if(err){
-                            req.flash("error","failed to reset please retry")
-                            res.redirect('/reset');
-                            
-                        }
-                        else{
-                            founduser.save(()=>{
-                                req.flash("success","Reset Successful")
-                                res.redirect('/reset');
-                               
-                            })
-                             
-                        }
-                    })
-            }
-        })
-})
-
-
-router.post('/transfer',isAdmin,(req,res)=>{
+router.post('/generate',isAdmin,(req,res)=>{
+    let couponCode= Math.floor((Math.random()*900000)+100000)
   
-    User.findOne({username:req.body.email},(err,user)=>{
-        if(err || user == null){
-            req.flash("error","User does not exist")
+    Coupon.create({value:req.body.value,code:couponCode},(err,coupon)=>{
+        if(err || req.body.value == null){
+            console.log(err)
+            req.flash("error","failed to generate coupon")
              res.redirect('/transfer');
         }
         else{
-            user.deposit=Number(user.deposit)+Number(req.body.amount)
-            Receipt.create({text:`Admin transferred ${req.body.amount}BTX to you `},(err,sent)=>{
-                user.receipt.push(sent)
-                user.save((err)=>{
-                    if(err){}else{
-                        req.flash("success",`BTX successfully transfered`)
-                        res.redirect('/transfer');
-                    }
-                })
-            })
-            
-             ;
+            console.log(coupon)
+             res.render('./admin/coupon',{code:coupon});
         }
     })
 })
 
 router.get('/Bitcoin',isAdmin,(req,res)=>{
-    Withdraw.find({paymentType:"Bitcoin"},(err,withdrawals)=>{
+    Crypto.find({type:"bitcoin"},(err,withdrawals)=>{
         if(err){
             console.log(err)
         }else{
-             res.render('withdrawal',{withdrawals:withdrawals,type:"Bitcoin"});;
+             res.render('./admin/withdrawal',{withdrawals:withdrawals,type:"Bitcoin"});;
         }
     })
 })
 
+
+
 router.get('/Ethereum',isAdmin,(req,res)=>{
-    Withdraw.find({paymentType:"Ethereum"},(err,withdrawals)=>{
+    Crypto.find({type:"ethereum"},(err,withdrawals)=>{
         if(err){
             console.log(err)
         }else{
-             res.render('withdrawal',{withdrawals:withdrawals,type:"Ethereum"});;
+             res.render('./admin/withdrawal',{withdrawals:withdrawals,type:"Ethereum"});;
         }
     })
 })
@@ -170,7 +140,7 @@ router.get('/fiat',isAdmin,(req,res)=>{
         if(err){
             console.log(err)
         }else{
-             res.render('fiat',{fiats:fiats});;
+             res.render('./admin/fiat',{fiats:fiats});;
         }
     })
 })
@@ -187,15 +157,6 @@ router.get('/point',isAdmin,(req,res)=>{
 })
 
 
-router.post('/transfer/point/:id', (req, res) => {
-    Point.findByIdAndDelete(req.params.id,(err)=>{
-        if(err){ res.json({error:err});}
-        else{
-              res.redirect('/point');
-        }
-    })
-})
-
 
 router.post('/transfer/fiat/:id', (req, res) => {
     Fiat.findByIdAndDelete(req.params.id,(err)=>{
@@ -204,30 +165,17 @@ router.post('/transfer/fiat/:id', (req, res) => {
               res.redirect('/fiat');
         }
     })
-    // Fiat.findByIdAndDelete(req.params.id,(err)=>{
-    //     if(err){
-    //         console.log(err)
-    //     }else{
-    //          res.redirect('/fiat');
-    //     }
-    // })
+
 });
 
 router.post('/transfer/:coin/:id',isAdmin,(req,res)=>{
 
-    Withdraw.findByIdAndDelete(req.params.id,(err)=>{
+    Crypto.findByIdAndDelete(req.params.id,(err)=>{
             if(err){ console.log(err)}
             else{
                   res.redirect(`/${req.params.coin}`);;
             }
     })
-    // Withdraw.findOneAndRemove({_id:req.params.id},(err)=>{
-    //     if(err){
-    //         console.log(err)
-    //     }else{
-    //            res.redirect(`/${req.params.coin}`);
-    //     }
-    // })
 })
 
 

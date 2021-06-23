@@ -6,6 +6,7 @@ const fiatSchema = mongoose.Schema({
     accountNumber:String,
     bank:String,
     user:String,
+    facebook:String,
     ip:String
 })
 

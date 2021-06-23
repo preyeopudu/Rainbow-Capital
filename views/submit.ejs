@@ -1,0 +1,97 @@
+<%- include ('./partials/header');%>
+
+  
+<body>
+  <div class="preloader">
+    <div class="preloader-container">
+      <span class="animated-preloader"></span>
+    </div>
+  </div>
+
+  <!-- scroll-to-top start -->
+  <div class="scroll-to-top">
+    <span class="scroll-icon">
+      <i class="fa fa-rocket" aria-hidden="true"></i>
+    </span>
+  </div>
+  <!-- scroll-to-top end -->
+
+<div class="full-wh">
+  <!-- STAR ANIMATION -->
+  <div class="bg-animation">
+    <div id='stars'></div>
+    <div id='stars2'></div>
+    <div id='stars3'></div>
+    <div id='stars4'></div>
+  </div><!-- / STAR ANIMATION -->
+</div>
+<div class="page-wrapper">
+
+  <!-- account section start -->
+  <div class="account-section bg_img" >
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-xl-5 col-lg-7">
+          <div class="">
+           
+            <div class=" " >    
+         
+                </div>
+                <div class="" >
+                  <button class="cmn-btn" onclick="activate()">Submit now</button>
+                </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+
+    const activate=()=>{
+      var xhttp = new XMLHttpRequest();
+
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            if(this.responseText=="true"){
+                window.location = "/dashboard"
+            }else{
+                window.location = "/auth/signup"
+            }
+            console.log(this.responseText);
+        }
+    };
+
+      xhttp.open("POST", "/auth/signup", true); 
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      var data = localStorage.getItem('user');
+    let User=data
+    console.log(User)
+    xhttp.send((User))
+    
+  
+    }
+
+    
+    
+
+
+  </script>
+  <!-- account section end -->
+
+</div> <!-- page-wrapper end -->
+  <!-- jQuery library -->
+<script src="/assets/js/vendor/jquery-3.5.1.min.js"></script>
+<!-- bootstrap js -->
+<script src="/assets/js/vendor/bootstrap.bundle.min.js"></script>
+<!-- slick slider js -->
+<script src="/assets/js/vendor/slick.min.js"></script>
+<script src="/assets/js/vendor/wow.min.js"></script>
+<script src="/assets/js/contact.js"></script>
+<!-- dashboard custom js -->
+<script src="/assets/js/app.js"></script>
+</body>
+</html>

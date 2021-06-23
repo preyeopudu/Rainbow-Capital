@@ -1,0 +1,192 @@
+<%- include ('./partials/header3');%>
+      <!-- <div style="align-content: center; ">
+        <div class="alert alert-dark"  style="text-align: center;;margin-bottom: 30px;margin-top: 30px;" role="alert">
+          <h5>Error occured here</h5>
+          <!-- <%=error%> -->
+        </div>
+      </div>
+    </div><!-- header__bottom end -->
+   
+    
+  </header>
+  <!-- header-section end  -->
+  
+    <!-- inner hero start -->
+    <section class="inner-hero bg_img" >
+
+
+
+     
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            
+            <h2 class="page-title">Dashboard</h2>
+            
+            
+            <ul class="page-breadcrumb">
+              <li><a href="/">Home</a></li>
+              <li>Dashboard</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- inner hero end -->
+
+
+    <!-- dashboard section start -->
+    <div class="pt-120 pb-120">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-12">
+            <div class="row mb-none-30">
+              <div class="col-xl-4 col-sm-6 mb-30">
+                <div class="d-widget d-flex flex-wrap">
+                  <div class="col-8">
+                    <span class="caption">Deposit Wallet Balance</span>
+                    <h4 class="currency-amount">&#8358; <%=user.deposit%></h4>
+                  </div>
+                  <div class="col-4">
+                    <div class="icon ml-auto">
+                      <i class="las la-dollar-sign"></i>
+                    </div>
+                  </div>
+                </div><!-- d-widget-two end -->
+              </div>
+              <div class="col-xl-4 col-sm-6 mb-30">
+                <div class="d-widget d-flex flex-wrap">
+                  <div class="col-8">
+                    <span class="caption">Interest Wallet Balance</span>
+                    <h4 class="currency-amount">&#8358; <%=user.interest%></h4>
+                  </div>
+                  <div class="col-4">
+                    <div class="icon ml-auto">
+                      <i class="las la-wallet"></i>
+                    </div>
+                  </div>
+                </div><!-- d-widget-two end -->
+              </div>
+              <div class="col-xl-4 col-sm-6 mb-30">
+                <div class="d-widget d-flex flex-wrap">
+                  <div class="col-8">
+                    <span class="caption">Referral Earnings</span>
+                    <h4 class="currency-amount">&#8358; <%=user.referalEarnings%></h4>
+                  </div>
+                  <div class="col-4">
+                    <div class="icon ml-auto">
+                      <i class="las la-user-friends"></i>
+                    </div>
+                  </div>
+                </div><!-- d-widget-two end -->
+              </div>
+              <html>
+<head>
+    <title>Social Share</title>
+</head>
+
+<body>
+
+
+  
+
+
+ 
+</body>
+</html>
+
+
+              <%if(user.plan.length>=1){%>
+
+                <%if(ad){%>
+                  <section class="pb-120 " >
+                    <div class="container">
+                      <div class="row justify-content-center">
+                        <div class="col-xl-8">
+                          <div class="cta-wrapper bg_img border-radius--10 text-center" >
+                           
+                            <h2 class="title mb-3"><%=ad[0].title%></h2>
+                            
+                            <p>This is a Revolutionary Money Making Platform! Invest for Future in Stable Platform and Make Fast Money. Not only we guarantee the fastest and the most exciting returns on your investments, but we also guarantee the security of your investment.</p>
+                            
+                            <form action="/<%=user.username%>/ad" method="POST">
+                                
+                                <button type="submit"  style="margin:30px"  type="button" onclick="share()" class="btn btn-success share-btn">Share</button>
+                            </form>
+                            
+                                  <p><small class="title mb-3"><%=ad[0].date.toLocaleString()%></small></p>
+    
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                  <%}else{%>
+   
+                    <%}%>
+
+               
+  
+              <%}else{%>
+
+
+                <%}%>
+
+              
+  
+            </div><!-- row end -->
+            <div class="row mt-50">
+              <div class="col-lg-12">
+                <div class="table-responsive--md p-0">
+
+                  <table class="table style--two white-space-nowrap">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Referral Name</th>
+                        <th>Amount</th>                
+                      </tr>
+                    </thead> 
+                    
+                    <tbody>
+                      <% referals.forEach(function(referal){%>
+                        <tr>
+                            <td data-label="Date"><%=referal.date.toLocaleDateString()%></td>
+                            <td data-label="Referral Name"><span class="base--color"><%=referal.userName%></span></td>
+                            <td data-label="Amount"><span class="text-success">+<%=referal.amount%></span></td>
+             
+                        </tr>
+                    <%})%>
+                    </tbody>
+                  </table>
+
+                  
+     
+                </div>
+              </div>
+            </div><!-- row end -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- dashboard section end -->
+
+    <script>
+        const title=window.document.title;
+        const url=window.document.location.href
+
+
+        const share=()=>{
+          var fbpopup = window.open("https://www.facebook.com/sharer/sharer.php?u=<%=ad[0].content%> ", "pop", "width=600, height=400, scrollbars=no");
+        
+    
+  
+        }
+
+   
+  
+    </script>
+
+
+    <!-- footer section start -->
+    <%- include ('./partials/footer');%>

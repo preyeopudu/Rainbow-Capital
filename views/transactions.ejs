@@ -1,0 +1,76 @@
+<%- include ('./partials/header3');%>
+  <!-- header-section end  -->
+  
+    <!-- inner hero start -->
+    <section class="inner-hero bg_img" >
+
+
+
+     
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <h2 class="page-title">Transactions</h2>
+            
+     
+            <ul class="page-breadcrumb">
+              <li><a href="/dashboard">Dashboard</a></li>
+              <li>Transactions</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- inner hero end -->
+
+
+    <!-- dashboard section start -->
+    <div class="pt-120 pb-120">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-12">
+        
+            <div class="row mt-50">
+              <div class="col-lg-12">
+                <div class="table-responsive--md p-0">
+                  <table class="table style--two white-space-nowrap">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Details</th>
+                        <th>Pre Balance</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <%user.receipt.forEach(function(receipt){%>
+                        <tr>
+                          <td data-label="Date"><%=receipt.date.toLocaleDateString()%></td>
+                          <td data-label="Amount">
+                            <span ><%=receipt.text%></span>
+                          </td>
+                          <td data-label="Wallet">
+                            <span class="badge base--bg"><%=receipt.details%></span>
+                          </td>
+                          <td data-label="Post Balance"><%=receipt.postBalance%></td>
+                        </tr>
+                      <%})%>
+                    
+      
+                  
+     
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div><!-- row end -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- dashboard section end -->
+
+
+
+    <!-- footer section start -->
+    <%- include ('./partials/footer');%>

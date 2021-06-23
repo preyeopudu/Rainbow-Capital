@@ -1,0 +1,56 @@
+<%- include ('./partials/header');%>
+
+
+<div class="account-section bg_img" >
+  <div class="container">
+    <div class="row justify-content-center">
+      
+      <div class="col-xl-5 col-lg-7">
+        <div class="account-card">
+         
+          <div class="account-card__body">
+            <nav class="nav">
+              <a class="nav-link" href="/dashboard" style="color: white;">Dashboard</a>
+              <a class="nav-link active" aria-current="page" href="/withdraw" style="color: white;">Fiat</a>
+              <a class="nav-link" href="/withdraw/bitcoin" style="color: white;">Bitcoin</a>
+              <a class="nav-link" href="/withdraw/ethereum" style="color: white;">Ethereum</a>
+                         </nav>
+            <form class="mt-4" action="/<%=user.username%>/fiat" method="POST">
+              <div class="form-group">
+                <label>Account Name</label>
+                <input type="text" class="form-control" name="accountName" placeholder="Enter Account Name" required>
+              </div>
+              
+              <div class="form-group">
+                <label>Account Number</label>
+                <input type="text" class="form-control" name="accountNumber" placeholder="Enter Account Number" required>
+              </div>
+
+              <div class="form-group">
+                <label>Bank Name</label>
+                <input type="text" class="form-control" name="bank" placeholder="Enter Bank Name" required>
+              </div>
+
+              <div class="form-group">
+                <label>Amount</label>
+                <input type="number" class="form-control" name="amount" placeholder="Enter Amount" required>
+              </div>
+
+              <div class="form-group">
+                <label>facebook ID</label>
+                <input type="text" class="form-control" name="facebook" placeholder="facebook account used" required>
+              </div>
+
+              <div class="form-row">
+              
+             
+              <div class="mt-3">
+                <button class="cmn-btn">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

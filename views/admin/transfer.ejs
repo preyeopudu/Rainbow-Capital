@@ -1,0 +1,42 @@
+<%- include ('./partials/header');%>
+
+<div class="container-fluid">
+    
+    <div class="row">
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4">
+            <form action="/generate" method="POST" style="margin-top: 50px;">
+             
+                <div class="form-group" style="margin-top: 30px;" >
+                    <label for="btx">credit to be sent</label>
+                    <select class="form-control" id="btx" name="value">
+                      <option>18000</option>
+                      <option>33000</option>
+                      <option>70000</option>
+                      <option>130000</option>
+                      <option>300000</option>
+                      <option>6400000</option>
+                      <option>11000000</option>
+                    </select>
+                  </div>
+                <button  type="submit" class="btn btn-dark btn-block" >Generate</button>
+
+                
+              </form>
+              
+        </div>
+        <div class="col-md-4">
+
+        </div>
+    </div>
+
+    
+  
+</div>
+
+
+
+
+<%- include ('./partials/footer');%>

@@ -1,0 +1,58 @@
+<%- include ('./partials/header');%>
+  <!-- header-section end  -->
+    
+    <!-- inner hero start -->
+    <section class="inner-hero bg_img" data-background="assets/images/bg/bg-1.jpg">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <h2 class="page-title">Blog Details</h2>
+            <ul class="page-breadcrumb">
+              <li><a href="/blog">Blog</a></li>
+              <li>Blog Details</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- inner hero end -->
+
+
+    <!-- blog-details-section start -->
+    <section class="pt-150 pb-150">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="blog-details-wrapper">
+              <div class="blog-details__thumb">
+                <img src="assets/images/blog/1.jpg" alt="image">
+                <div class="post__date">
+                  <span class="date"><%=blog.date%></span>
+                  <span class="month"><%=blog.date%></span>
+                </div>
+              </div><!-- blog-details__thumb end -->
+              <div class="blog-details__content">
+                <h4 class="blog-details__title"><%=blog.title%></h4>
+                <p><%=blog.text%> </p>
+                </div><!-- blog-details__content end -->
+     
+            </div><!-- blog-details-wrapper end -->
+      
+         
+          </div>
+      
+              
+
+           
+
+            
+       
+            </div><!-- sidebar end -->
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- blog-details-section end -->
+
+
+    <%- include ('./partials/footer');%>[]

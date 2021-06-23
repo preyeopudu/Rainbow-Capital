@@ -4,9 +4,9 @@ const app = express()
 
 const mongoose = require('mongoose');
 app.use(cors())
-
-// const uri= 'mongodb://localhost:27017/btx'
-const uri = 'mongodb+srv://opudupreye:5gr3gF4YVD5F6K2b@billiontraderx.bxlns.mongodb.net/<billiontraderx>?retryWrites=true&w=majority'
+ 
+const uri= 'mongodb://localhost:27017/btx'
+// const uri = 'mongodb+srv://opudupreye:5gr3gF4YVD5F6K2b@billiontraderx.bxlns.mongodb.net/<billiontraderx>?retryWrites=true&w=majority'
 mongoose.connect(uri, {useNewUrlParser: true,useUnifiedTopology: true})
 .then(() => {
   console.log('MongoDB Connected…')
@@ -16,11 +16,11 @@ mongoose.connect(uri, {useNewUrlParser: true,useUnifiedTopology: true})
 
 
 
-const stackRoutes= require('./routes/stack-route')
+const stackRoutes= require('./routes/plan-route')
 const authRoutes=require('./routes/auth-route')
 const adminRoutes=require('./routes/admin-route')
 const userRoutes=require('./routes/user-route')
-const Stack=require('./model/stack')
+const Stack=require('./model/plan')
 const Receipt=require('./model/receipt')
 const User =require('./model/user');
 const bodyParser=require('body-parser')
@@ -29,7 +29,10 @@ const flash=require('connect-flash')
 const LocalStrategy=require('passport-local')
 const passportLocalMongoose=require('passport-local-mongoose')
 const Withdraw =require('./model/withdraw');
-const stack = require("./model/stack");
+const Plan = require("./model/plan");
+const Ad=require('./model/ad')
+const Notification=require('./model/notification');
+const notification = require("./model/notification");
 
 
 app.set('view engine', 'ejs');
@@ -56,71 +59,102 @@ app.use(function(req,res,next){
     next()
 })
 
-
+app.use(userRoutes,cors()); 
 app.use(authRoutes,cors());
 app.use(stackRoutes,cors());
 app.use(adminRoutes,cors());
-app.use(userRoutes,cors()); 
 
-app.get('/:user', async(req, res) => {
-    const founduser =req.params.user
-    User.findOne({username:founduser},(err,user)=>{
-        if(err || user == null){
-             res.json({
-                 err:"user does not exist"
-             });
-        }
 
+
+function isAdmin(req,res,next){
+    if(req.isAuthenticated()&&req.user.username=="admin"){
+        return next()
+    }
+     res.redirect('/auth/signin');
+}
+
+function isLoggedIn(req,res,next){
+    if(req.isAuthenticated()){
+        return next()
+    }
+    res.redirect('auth/signin')
+}
+
+
+app.get('/', (req, res) => {
+    res.render('index');
+});
+
+app.get('/dashboard',isLoggedIn, (req, res) => {
+    Ad.find({},(err,ad)=>{
+        if(err){console.log(err)}
         else{
-            const userStack=user.stack
-            ///check if user is currently on a plan //
-            if(user.stack.length>1){
-                user.stack.pop()
-                user.save(()=>{
-                     res.json({stack:true,user:user});
-                })
-            }
-
-             else if(user.stack.length>0){
-                const today= new Date()
-                const matureDate=user.stack[0].matureDate
-                 if(today>=matureDate){
-                     Stack.findOneAndDelete({_id:user.stack[0]._id},(err)=>{
-                         if(err){
-                             console.log('An error occurred during returns')
-                         }else{
-                            user.previous=userStack[0].cost
-                            user.lockedFund=Number(user.lockedFund)+Number(userStack[0].return)
-                            user.stack.pop()
-                            user.save((err)=>{
-                                if(err){
-                                     console.log({message:"not saved"});
-                                     console.log(err)
-                                }
-                                else{
-                                    res.json({user:user})
-                                }
-                            })
-                         }
-                     })
-                 }else{
-                    res.json({stack:true,user:user})
-                 }
-             }
-
-             else{
-                 
-                  res.json({
-                      stack:false,
-                      user:user
-                  });
-             }
+            res.render('dashboard',{user:req.user,referals:req.user.referals,ad:ad}); 
         }
     })
+    });
 
+app.get('/about', (req, res) => {
+    res.render('about');
+});
+
+app.get('/blog', (req, res) => {
+  
+        
+    Notification.find({},(err,notification)=>{
+        if(err){
+            console.log(err)
+             res.redirect('/');
+        }else{
+            res.render('blog',{blogs:notification});
+        }
+    })
+});
+
+app.get('/blog/:id',(req,res)=>{
+    Notification.findById(req.params.id,(err,notification)=>{
+        if(err){res.redirect('/')}
+        else{
+            res.render('blog-details',{blog:notification});
+        }
+    })
+})
+
+app.get('/contact', (req, res) => {
+    res.render('contact');
+});
+
+app.get('/disclaimer', (req, res) => {
+    res.render('disclaimer');
+});
+
+app.get('/plan',isLoggedIn, (req, res) => {
+    res.render('plan',{user:req.user});
+});
+
+app.get('/about', (req, res) => {
+    res.render('about');
+});
+
+app.get('/payment',isLoggedIn, (req, res) => {
+    res.render('payment');
 });
 
 
+app.get('/deposit',isLoggedIn, (req, res) => {
+    res.render('deposit',{user:req.user});
+});
+
+// User.findOneAndDelete({},(err)=>{
+//     if(err){console.log(err)}
+//     else{
+//         console.log('deleted')
+//     }
+// })
+
+app.get('*', (req, res) => {
+    res.render("error-404");
+});
 
 
 let port=process.env.PORT||5000

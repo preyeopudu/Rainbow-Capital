@@ -8,10 +8,37 @@ const Notification=require('../model/notification');
 const Fiat =require('../model/fiat')
 const Ad=require('../model/ad');
 const Point=require('../model/points')
+const Coupon=require('../model/coupon')
+const Crypto=require('../model/crypto')
 const { Router } = require("express");
+const Plan = require("../model/plan");
+
+// User.findOne({},(err,user)=>{
+//     if(err)(console.log(err))
+//     else{
+//         console.log(user)
+//     }
+// })
 
 
-router.get('/notifications', (req, res) => {
+function isLoggedIn(req,res,next){
+    if(req.isAuthenticated()){
+        return next()
+    }
+    res.redirect('auth/signin')
+}
+
+router.get('/user/:user', (req, res) => {
+    User.findOne({username:req.params.user},(err,user)=>{
+        if(err){res.json({err})}
+        else{
+             res.json({user});
+        }
+    })
+
+});
+
+router.get('/notifications',isLoggedIn, (req, res) => {
     Notification.find({},(err,allNotifications)=>{
         if(err){ console.log(err)}
         else{
@@ -20,6 +47,8 @@ router.get('/notifications', (req, res) => {
          
     })
 });
+
+
 
 router.get('/ads',(req,res)=>{
     Ad.find({},(err,ad)=>{
@@ -30,25 +59,124 @@ router.get('/ads',(req,res)=>{
     })
 })
 
+router.get('/transactions',isLoggedIn, (req, res) => {
+    res.render('transactions',{user:req.user});
 
-router.post('/:user/notify', (req, res) => {
-        User.findOne({username:req.params.user},(err,user)=>{
-            user.notice=false
-            user.ip=req.headers['x-forwarded-for']
-            user.save(()=>{
-                if(err){
-                    console.log(err);
-                }else{
-                    res.json(user);
-                }
-                 
-            })
-        })
 });
 
-router.post('/:user/withdraw',(req,res)=>{
+
+router.get('/withdraw',isLoggedIn, (req, res) => {
+    
+        res.render('withdraw',{user:req.user});
+});
+
+
+router.get('/withdraw/bitcoin',isLoggedIn, (req, res) => {
+        res.render('bitcoin',{user:req.user});
+});
+
+router.get('/withdraw/ethereum',isLoggedIn, (req, res) => {
+    res.render('ethereum',{user:req.user});
+});
+
+router.post('/:user/ethereum', (req, res) => {
+    const userCrypto={
+        amount:req.body.amount,
+        wallet:req.body.wallet,
+        facebook:req.body.facebook,
+        user:req.user.username,
+        type:'ethereum'
+    }
+
+    User.findOne({username:req.params.user},(err,user)=>{
+        if(err || user==null){ res.json({err:"user does not exist"});}
+        else{
+            if(user.interest<userCrypto.amount){
+                 res.json({insufficient:true,user});
+            }
+            User.findOne({username:req.params.user},(err,user)=>{
+                if(err || user==null){ res.json({err:"user does not exist"});}
+                else{
+                    if(user.interest<userCrypto.amount){
+                         res.json({insufficient:true,user});
+                    }
+                    else{
+                        Receipt.create({text:`-${userCrypto.amount} NG`,postBalance:`${user.interest} NGN`,details:`Withdrawal`},(err,receipt)=>{
+                            if(err){console.log(err)}
+                            else{
+                                user.interest=Number(user.interest)-Number(userCrypto.amount)
+                                user.receipt.push(receipt)
+                                user.ip=req.headers['x-forwarded-for']
+                                Crypto.create(userCrypto,(err,withdraw)=>{})
+                                user.save((err)=>{
+                                    if(err){
+                                        console.log(err)
+                                        res.json({insufficient:true,user})
+                                    }
+                                    else{
+                                    console.log(userCrypto)
+                                    res.json({insufficient:false,user});}
+                                }) 
+                            }   
+                        })
+               
+                    }
+                }
+            })
+        }
+    }) 
+});
+
+router.post('/:user/bitcoin', (req, res) => {
+    const userCrypto={
+        amount:req.body.amount,
+        wallet:req.body.wallet,
+        facebook:req.body.facebook,
+        user:req.user.username,
+        type:'bitcoin'
+    }
+
+    User.findOne({username:req.params.user},(err,user)=>{
+        if(err || user==null){ res.json({err:"user does not exist"});}
+        else{
+            if(user.interest<userCrypto.amount){
+                 res.json({insufficient:true,user});
+            }
+            User.findOne({username:req.params.user},(err,user)=>{
+                if(err || user==null){ res.json({err:"user does not exist"});}
+                else{
+                    if(user.interest<userCrypto.amount){
+                         res.json({insufficient:true,user});
+                    }
+                    else{
+                        Receipt.create({text:`-${userCrypto.amount} NG`,postBalance:`${user.interest} NGN`,details:`Withdrawal`},(err,receipt)=>{
+                            if(err){console.log(err)}
+                            else{
+                                user.interest=Number(user.interest)-Number(userCrypto.amount)
+                                user.receipt.push(receipt)
+                                user.ip=req.headers['x-forwarded-for']
+                                Crypto.create(userCrypto,(err,withdraw)=>{})
+                                user.save((err)=>{
+                                    if(err){
+                                        console.log(err)
+                                        res.json({insufficient:true,user})
+                                    }
+                                    else{
+                                    console.log(userCrypto)
+                                    res.json({insufficient:false,user});}
+                                }) 
+                            }   
+                        })
+               
+                    }
+                }
+            })
+        }
+    })  
+});
+
+router.post('/:user/withdraw',isLoggedIn,(req,res)=>{
     const userWithdrawal={
-        paymentType:req.body.paymentType,
         paymentDate:Date.now(),
         amount:req.body.amount,
         address:req.body.address,
@@ -85,139 +213,116 @@ router.post('/:user/withdraw',(req,res)=>{
 })
 
 
-router.post('/:user/fiat',(req,res)=>{
+router.post('/:user/fiat',isLoggedIn,(req,res)=>{
     const userFiat={
         accountName:req.body.accountName,
         amount:req.body.amount,
         accountNumber:req.body.accountNumber,
         bank:req.body.bank,
-        user:req.params.user
+        user:req.params.user,
+        facebook:req.body.facebook
     }
     console.log(userFiat)
     User.findOne({username:req.params.user},(err,user)=>{
         if(err || user==null){ res.json({err:"user does not exist"});}
         else{
-            if(user.withdrawble<userFiat.amount){
+            if(user.interest<userFiat.amount){
                  res.json({insufficient:true,user});
             }
             else{
-                user.withdrawble=Number(user.withdrawble)-Number(userFiat.amount)
-                user.ip=req.headers['x-forwarded-for']
-                Fiat.create(userFiat,(err,withdraw)=>{})
-                user.save((err)=>{
-                    if(err){
-                        console.log(err)
-                        res.json({insufficient:true,user})
-                    }
+                Receipt.create({text:`-${userFiat.amount} NG`,postBalance:`${user.interest} NGN`,details:`Withdrawal`},(err,receipt)=>{
+                    if(err){console.log(err)}
                     else{
-                    console.log(userFiat)
-                    res.json({insufficient:false,user});}
-                }) 
-            }
-        }
-    })
-})
-
-router.post('/:user/point',(req,res)=>{
-    const userAd={
-        accountName:req.body.accountName,
-        amount:req.body.amount,
-        username:req.params.user
-    }
-    console.log(userAd)
-    User.findOne({username:req.params.user},(err,user)=>{
-        if(err || user==null){ res.json({err:"user does not exist"});}
-        else{
-            if(user.adPoint<userAd.amount){
-                 res.json({insufficient:true,user});
-            }
-            else{
-                user.adPoint=Number(user.adPoint)-Number(userAd.amount)
-                user.ip=req.headers['x-forwarded-for']
-                Point.create(userAd,(err,withdraw)=>{})
-                user.save((err)=>{
-                    if(err){
-                        console.log(err)
-                        res.json({insufficient:true,user})
-                    }
-                    else{
-                    console.log(userAd)
-                    res.json({insufficient:false,user});}
-                }) 
-            }
-        }
-    })
-})
-
-
-
-router.post('/:user/transfer',(req,res)=>{
-    const amount=req.body.amount
-    User.findOne({username:req.params.user},(err,user)=>{
-        if(err || user==null){ res.json({err:"user does not exist"});}
-        else{
-            User.findOne({username:req.body.user},(err,recipient)=>{
-                if(err||recipient==null||req.params.user==req.body.user){res.json({userFalse:true})}
-                else{
-                    if(user.deposit>=amount || user.withdrawble>=amount ){
-                        Receipt.create({text:`${user.name} transferred ${amount} BTX to you.`},(err,recipientReceipt)=>{
-                            if(user.deposit>=amount){
-                                Receipt.create({text:`you transferred ${amount} BTX to ${recipient.name}.`},(err,userReceipt)=>{
-                                    user.deposit=Number(user.deposit)-Number(amount)
-                                    user.receipt.push(userReceipt)
-                                    user.ip=req.headers['x-forwarded-for']
-                                    user.save((err)=>{
-                                        if(err){
-                                            res.json({success:false})
-                                        }else{
-                                        res.json({success:true,user})
-                                        recipient.deposit=Number(recipient.deposit)+Number(amount)
-                                        recipient.receipt.push(recipientReceipt)
-                                        recipient.save()}
-                                    })
-                                })
-                                
-                                
-                            }else if(user.withdrawble>=amount){
-                                Receipt.create({text:`you transferred ${amount} BTX to ${recipient.name}.`},(err,userReceipt)=>{
-                                    user.receipt.push(userReceipt)
-                                    user.withdrawble=Number(user.withdrawble)-Number(amount)
-                                    user.ip=req.headers['x-forwarded-for']
-                                    user.save(()=>{
-                                        res.json({success:true,user})
-                                        recipient.receipt.push(recipientReceipt)
-                                        recipient.deposit=Number(recipient.deposit)+Number(amount)
-                                        recipient.save()
-                                    })
-                                })
+                        user.interest=Number(user.interest)-Number(userFiat.amount)
+                        user.receipt.push(receipt)
+                        user.ip=req.headers['x-forwarded-for']
+                        Fiat.create(userFiat,(err,withdraw)=>{})
+                        user.save((err)=>{
+                            if(err){
+                                console.log(err)
+                                res.json({insufficient:true,user})
                             }
-                        })
-                        
-                    }else{ res.json({success:false});}
+                            else{
+                            console.log(userFiat)
+                            res.json({insufficient:false,user});}
+                        }) 
+                    }   
+                })
+       
+            }
+        }
+    })
+})
+
+router.post('/:user/deposit',isLoggedIn, (req, res) => {
+    let couponcode=req.body.coupon
+    Coupon.findOneAndDelete({code:couponcode},(err,coupon)=>{
+        if(err || coupon==null){ res.json({err});}
+        else{
+            User.findOne({username:req.params.user},(err,user)=>{
+        
+                if(err||user==null){ res.json({err});}
+                else{
+                   
+                    Receipt.create({text:`+ ${coupon.value} NGN`,postBalance:`${user.deposit} NGN`,details:`Deposit`},(err,receipt)=>{
+                        if(err){console.log(err)}
+                        else{
+                            console.log(receipt)
+                            user.receipt.push(receipt)
+                            user.deposit=Number(user.deposit)+Number(coupon.value)
+                            user.save((err)=>{
+                                if(err){ res.json({err})}
+                                else{
+                                    res.redirect('/dashboard')
+                                }
+                            })
+                        }
+                    })
                 }
             })
         }
-    }) 
-})
+      
+    })
+   
+}); 
 
 
-router.post('/:user/ad',(req,res)=>{
+router.post('/:user/ad',isLoggedIn,(req,res)=>{
+    console.log(1)
     User.findOne({username:req.params.user},(err,user)=>{
         if(err){
             console.log("an error occured user-routes 144")
         }
         else{
             if(user.shared===false){
-                user.adPoint=Number(user.adPoint)+20
+                user.interest=Number(user.interest)+user.plan[0].daily
+                console.log(user.plan[0].daily)
                 user.shared=true
-                user.save(err=>{
-                    if(err){console.log(err)}
-                    
-                    else{
-                        console.log(user)
-                         res.json({user})
+
+                if(Date.now()>=user.plan[0].matureDate){
+                    Plan.findByIdAndDelete(user.plan[0]._id,(err)=>{
+                        if(err){ res.json({err});}
+                        else{
+                            user.plan.pop()
+                            user.save(()=>{
+                                if(err){console.log(err)}
+                                else{
+                                    res.json({detail:"yes"})
+                                }
+                            })
                         }
-                })
+                    })
+                }else{
+                    user.save(err=>{
+                        if(err){console.log(err)}
+                        
+                        else{
+                           
+                             res.json({detail:"no"})
+                            }
+                    })
+                }
+               
 
             }else{
                  res.json({user});
@@ -226,28 +331,6 @@ router.post('/:user/ad',(req,res)=>{
 })
 })
 
-router.post('/:user/secret', (req, res) => {
-    const secret=req.body.secretuser
-    console.log(`your secret is ${secret}`)
-    User.findOne({username:req.params.user},(err,user)=>{
-        if(err){
-             res.json({success:false});
-        }else{
-             user.secretCode=secret
-             user.save((err)=>{
-                 if(err){
-                     console.log(err)
-                    res.json({success:false})
-                 }
-                 else{
-                     console.log(user.secret)
-                    res.json({user})
-                    
-                 }
-             })
-        }
-    })
-});
 
 
 module.exports=router  
