@@ -17,6 +17,7 @@ router.post('/auth/otp', (req, res) => {
     User.findOne({'username':email},(err,user)=>{
         if(user!=null || err){
              res.redirect('/auth/signup');
+             req.flash('error',"user exists or an error occured")
              console.log("User exists , try again with another email")
         }else{
             Otp.create({code:otpcode},async(err,otp)=>{
@@ -44,7 +45,7 @@ router.post('/auth/otp', (req, res) => {
                             res.redirect('/auth/otp')
                              console.log({sent:false});
                         }
-                        else{
+                         else{
                             console.log('Email sent :'+info.response)
                             res.redirect('/auth/otp')
                             console.log({sent:true})
