@@ -5,9 +5,9 @@ const app = express();
 const mongoose = require("mongoose");
 app.use(cors());
 
-const uri = "mongodb://localhost:27017/rainbow";
-// const uri =
-//   "mongodb+srv://opudupreye:programmer8@cluster0.bz1ry.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+// const uri = "mongodb://localhost:27017/rainbow";
+const uri =
+  "mongodb+srv://opudupreye:programmer8@cluster0.bz1ry.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
