@@ -12,7 +12,15 @@ const Bill = require("../model/bill");
 const Coupon = require("../model/coupon");
 const Crypto = require("../model/crypto");
 
-// User.register(new User({ username: "RainbowMen" }), "@RainbowCapitals2021");
+User.register(
+  new User({ username: "RainbowMen" }),
+  "@RainbowCapitals2021",
+  (err, user) => {
+    if (err) {
+      console.log(err);
+    }
+  }
+);
 
 function isAdmin(req, res, next) {
   if (req.isAuthenticated() && req.user.username == "RainbowMen") {
