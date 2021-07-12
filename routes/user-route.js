@@ -331,8 +331,11 @@ router.post("/:user/save", isLoggedIn, (req, res) => {
               details: `Save`,
             },
             (err, receipt) => {
+              console.log(receipt)
               if (user.Amount >= amount) {
+
                 user.Amount = Number(user.Amount) - amount;
+                user.receipt.push(receipt);
                 user.save(() => {
                   res.redirect("/saving");
                 });
