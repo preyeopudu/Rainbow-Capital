@@ -89,7 +89,6 @@ router.post("/admin/ads", isAdmin, (req, res) => {
           if (err) {
             console.log(err);
           } else {
-            console.log(ad);
             req.flash("success", "Ad post has been sent");
             res.redirect("/admin/ads");
           }

@@ -28,36 +28,6 @@ function isLoggedIn(req, res, next) {
   res.redirect("auth/signin");
 }
 
-router.get("/user/:user", (req, res) => {
-  User.findOne({ username: req.params.user }, (err, user) => {
-    if (err) {
-      res.json({ err });
-    } else {
-      res.json({ user });
-    }
-  });
-});
-
-router.get("/notifications", isLoggedIn, (req, res) => {
-  Notification.find({}, (err, allNotifications) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json({ notifications: allNotifications });
-    }
-  });
-});
-
-router.get("/ads", (req, res) => {
-  Ad.find({}, (err, ad) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json({ ad: ad });
-    }
-  });
-});
-
 router.get("/transactions", isLoggedIn, (req, res) => {
   res.render("transactions", { user: req.user });
 });
@@ -88,14 +58,14 @@ router.post("/:user/ethereum", (req, res) => {
       res.json({ err: "user does not exist" });
     } else {
       if (user.interest < userCrypto.amount) {
-        res.json({ insufficient: true, user });
+        res.redirect("/plan");
       }
       User.findOne({ username: req.params.user }, (err, user) => {
         if (err || user == null) {
-          res.json({ err: "user does not exist" });
+          res.redirect("/plan");
         } else {
           if (user.interest < userCrypto.amount) {
-            res.json({ insufficient: true, user });
+            res.redirect("/plan");
           } else {
             Receipt.create(
               {
@@ -115,10 +85,10 @@ router.post("/:user/ethereum", (req, res) => {
                   user.save((err) => {
                     if (err) {
                       console.log(err);
-                      res.json({ insufficient: true, user });
+                      res.redirect("/plan");
                     } else {
                       console.log(userCrypto);
-                      res.json({ insufficient: false, user });
+                      res.redirect("/plan");
                     }
                   });
                 }
@@ -152,7 +122,7 @@ router.post("/:user/bitcoin", (req, res) => {
           res.json({ err: "user does not exist" });
         } else {
           if (user.interest < userCrypto.amount) {
-            res.json({ insufficient: true, user });
+            res.redirect("/plan");
           } else {
             Receipt.create(
               {
@@ -172,10 +142,10 @@ router.post("/:user/bitcoin", (req, res) => {
                   user.save((err) => {
                     if (err) {
                       console.log(err);
-                      res.json({ insufficient: true, user });
+                      res.redirect("/plan");
                     } else {
                       console.log(userCrypto);
-                      res.json({ insufficient: false, user });
+                      res.redirect("/transactions");
                     }
                   });
                 }
@@ -198,10 +168,10 @@ router.post("/:user/withdraw", isLoggedIn, (req, res) => {
   console.log(userWithdrawal);
   User.findOne({ username: req.params.user }, (err, user) => {
     if (err || user == null) {
-      res.json({ err: "user does not exist" });
+      res.redirect("/plan");
     } else {
       if (user.withdrawble < userWithdrawal.amount) {
-        res.json({ insufficient: true, user });
+        res.redirect("/plan");
       } else if (user.withdrawble >= userWithdrawal.amount) {
         user.withdrawble =
           Number(user.withdrawble) - Number(userWithdrawal.amount);
@@ -215,9 +185,9 @@ router.post("/:user/withdraw", isLoggedIn, (req, res) => {
         });
         user.save((err) => {
           if (err) {
-            res.json({ insufficient: true, user });
+            res.redirect("/plan");
           } else {
-            res.json({ insufficient: false, user });
+            res.redirect("/transactions");
           }
         });
       }
@@ -237,10 +207,10 @@ router.post("/:user/fiat", isLoggedIn, (req, res) => {
   console.log(userFiat);
   User.findOne({ username: req.params.user }, (err, user) => {
     if (err || user == null) {
-      res.json({ err: "user does not exist" });
+      res.redirect("/deposit");
     } else {
       if (user.interest < userFiat.amount) {
-        res.json({ insufficient: true, user });
+        res.redirect("/plan");
       } else {
         Receipt.create(
           {
@@ -259,10 +229,10 @@ router.post("/:user/fiat", isLoggedIn, (req, res) => {
               user.save((err) => {
                 if (err) {
                   console.log(err);
-                  res.json({ insufficient: true, user });
+                  res.redirect("/deposit");
                 } else {
                   console.log(userFiat);
-                  res.json({ insufficient: false, user });
+                  res.redirect("/transactions");
                 }
               });
             }
@@ -314,37 +284,64 @@ router.post("/:user/deposit", isLoggedIn, (req, res) => {
 
 router.post("/:user/save", isLoggedIn, (req, res) => {
   let amount = req.body.amount;
-  let date = req.body.date;
+  let time = req.body.time;
+  let date;
+  console.log(amount);
+  if (time == "2 Months") {
+    date = 60;
+  } else if (time == "4 Months") {
+    date = 120;
+  } else if (time == "6 Months") {
+    date = 180;
+  } else if (time == "8 Months") {
+    date = 240;
+  } else if (time == "10 Months") {
+    date = 300;
+  } else if (time == "12 Months") {
+    date = 360;
+  }
 
+  console.log(date);
   User.findOne({ username: req.params.user }, (err, user) => {
     if (err || user == null) {
       console.log(err);
     } else {
       if (user.savings.length > 0) {
-        res.redirect("/saving");
+        res.redirect("/dashboard");
       } else {
-        Saving.create({}, (err, plan) => {
-          Receipt.create(
+        if (user.interest >= Number(amount)) {
+          Saving.create(
             {
-              text: `- ${plan.cost} NGN`,
-              postBalance: `${user.deposit} NGN`,
-              details: `Save`,
+              matureDate: Date.now() + date * 24 * 60 * 60 * 1000,
+              cost: amount,
             },
-            (err, receipt) => {
-              console.log(receipt)
-              if (user.Amount >= amount) {
-
-                user.Amount = Number(user.Amount) - amount;
-                user.receipt.push(receipt);
-                user.save(() => {
-                  res.redirect("/saving");
-                });
-              } else {
-                res.redirect("/saving");
-              }
+            (err, savings) => {
+              Receipt.create(
+                {
+                  text: `- ${amount} NGN`,
+                  postBalance: `${user.interest} NGN`,
+                  details: `Save`,
+                },
+                (err, receipt) => {
+                  console.log(receipt);
+                  user.interest = Number(user.interest) - amount;
+                  user.receipt.push(receipt);
+                  user.savings.push(savings);
+                  user.save((err) => {
+                    if (err) {
+                      console.log(`err ${err}`);
+                      res.redirect("/saving");
+                    } else {
+                      res.redirect("/saving");
+                    }
+                  });
+                }
+              );
             }
           );
-        });
+        } else {
+          res.redirect("/deposit");
+        }
       }
     }
   });
@@ -371,7 +368,7 @@ router.post("/:user/ad", isLoggedIn, (req, res) => {
                 if (err) {
                   console.log(err);
                 } else {
-                  res.json({ detail: "yes" });
+                  res.redirect("/dashboard");
                 }
               });
             }
@@ -381,12 +378,12 @@ router.post("/:user/ad", isLoggedIn, (req, res) => {
             if (err) {
               console.log(err);
             } else {
-              res.json({ detail: "no" });
+              res.redirect("/dashboard");
             }
           });
         }
       } else {
-        res.json({ user });
+        res.redirect("/dashboard");
       }
     }
   });

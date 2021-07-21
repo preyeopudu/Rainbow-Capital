@@ -27,7 +27,7 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
       name: "STUDENT",
       cost: 18000,
       daily: 1242,
-      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(29)
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
         ._d,
     };
     bonus = 900;
@@ -36,7 +36,7 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
       name: "ARTISANS",
       cost: 33000,
       daily: 2278,
-      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(29)
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
         ._d,
     };
     bonus = 1650;
@@ -45,7 +45,7 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
       name: "JOB HOLDERS",
       cost: 70000,
       daily: 4833,
-      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(29)
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
         ._d,
     };
     bonus = 3500;
@@ -54,7 +54,7 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
       name: "CIVIL",
       cost: 130000,
       daily: 8976,
-      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(29)
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
         ._d,
     };
     bonus = 6500;
@@ -63,7 +63,7 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
       name: "ENTREPRENEUR",
       cost: 300000,
       daily: 20714,
-      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(29)
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
         ._d,
     };
     bonus = 15000;
@@ -72,7 +72,7 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
       name: "PROFESSIONAL",
       cost: 640000,
       daily: 44190,
-      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(29)
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
         ._d,
     };
     bonus = 320000;
@@ -81,7 +81,7 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
       name: "CAPITALIST",
       cost: 1100000,
       daily: 75952,
-      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(29)
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
         ._d,
     };
     bonus = 55000;
@@ -92,9 +92,9 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
       console.log(err);
     } else {
       if (user.plan.length > 0) {
-        res.json({ active: true });
+        res.redirect("/dashboard");
       } else if (user.plan.length == 0) {
-        if (user.Amount >= plan.cost || user.deposit >= plan.cost) {
+        if (user.interest >= plan.cost || user.deposit >= plan.cost) {
           Plan.create(plan, (err, plan) => {
             Receipt.create(
               {
@@ -105,8 +105,8 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
               (err, receipt) => {
                 if (user.deposit >= plan.cost) {
                   user.deposit = Number(user.deposit) - plan.cost;
-                } else if (user.Amount >= plan.cost) {
-                  user.Amount = Number(user.Amount) - plan.cost;
+                } else if (user.interest >= plan.cost) {
+                  user.interest = Number(user.interest) - plan.cost;
                 }
                 if (user.bonus == false) {
                   User.findOne(
@@ -118,7 +118,7 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
                         user.bonus = true;
                         user.receipt.push(receipt);
                         user.save(() => {
-                          res.json({ user });
+                          res.redirect("/transactions");
                         });
                       } else {
                         if (user.username != foundrefree.username) {
@@ -126,7 +126,7 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
                             { userName: user.username, amount: bonus },
                             (err, referal) => {
                               if (err) {
-                                res.json({ err });
+                                res.redirect("/transactions");
                               } else {
                                 foundrefree.referals.push(referal);
                                 foundrefree.interest =
@@ -150,7 +150,7 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
                           user.receipt.push(receipt);
                           user.plan.push(plan);
                           user.save(() => {
-                            res.json({ user });
+                            res.redirect("/transactions");
                           });
                         }
                       }
@@ -162,14 +162,14 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
                   user.receipt.push(receipt);
                   user.plan.push(plan);
                   user.save(() => {
-                    res.json({ user });
+                    res.redirect("/transactions");
                   });
                 }
               }
             );
           });
         } else {
-          res.json({ insufficient: true });
+          res.redirect("/deposit");
         }
       }
     }

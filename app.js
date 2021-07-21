@@ -8,6 +8,7 @@ app.use(cors());
 // const uri = "mongodb://localhost:27017/rainbow";
 const uri =
   "mongodb+srv://opudupreye:programmer8@cluster0.bz1ry.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
@@ -32,6 +33,7 @@ const Plan = require("./model/plan");
 const Ad = require("./model/ad");
 const Notification = require("./model/notification");
 const notification = require("./model/notification");
+const { use } = require("./routes/user-route");
 
 app.set("view engine", "ejs");
 app.use(flash());
@@ -139,12 +141,31 @@ app.get("/payment", isLoggedIn, (req, res) => {
   res.render("payment");
 });
 
-app.get("/deposi3t", isLoggedIn, (req, res) => {
+app.get("/deposit", isLoggedIn, (req, res) => {
   res.render("deposit", { user: req.user });
 });
 
 app.get("/saving", isLoggedIn, (req, res) => {
-  res.render("saving", { user: req.user });
+  User.findById(req.user._id, (err, user) => {
+    if (err) {
+      console.log(err);
+      res.redirect("/saving");
+    } else {
+      if (new Date() >= user.savings[0].matureDate) {
+        if (err) {
+          console.log(err);
+        } else {
+          user.interest = Number(user.interest) + Number(user.savings[0].cost);
+          user.savings.pop();
+          user.save(() => {
+            res.render("saving", { user: req.user });
+          });
+        }
+      } else {
+        res.render("saving", { user: req.user });
+      }
+    }
+  });
 });
 
 // User.findOneAndDelete({},(err)=>{

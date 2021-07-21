@@ -29,37 +29,46 @@
   </div>
   <div class="page-wrapper">
 
-    <!-- account section start -->
+    <!-- account section start -->]
     <div class="account-section bg_img" >
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-xl-5 col-lg-7">
             <div class="account-card">
             
-              <div class="account-card__body">
-                <form action="/<%=user.username%>/save" method="POST" class="mt-4">
-                  
-                  <div class="form-group">
-                    <input type="number" name="amount" class="form-control" placeholder="Input Amount" required>
+              <%if(user.savings.length >0){%>
+                <div class="account-card__body">
+                  <p>savings of <%=user.savings[0].cost%> NGN  will be available in your interest wallet on <%=user.savings[0].matureDate.toLocaleString()%></p>
+                </div>
+              <%}else if(user.savings.length<=0){%>
+                <div class="account-card__body">
+                  <form action="/<%=user.username%>/save" method="POST" class="mt-4">
                     
-                    <select type="text" name="time" class="form-control"  required style="margin-top: 40px;">
-                        <option>2 Months</option>
-                        <option>4 Months</option>
-                        <option>6 Months</option>
-                        <option>8 Months</option>
-                        <option>10 Months</option>
-                        <option>12 Months</option>
-                    </select>
-                  </div>
+                    <div class="form-group">
+                      <input type="number" name="amount" class="form-control" placeholder="Input Amount"  required>
+                      
+                      <select type="text" name="time" class="form-control"  required style="margin-top: 40px;">
+                          <option>2 Months</option>
+                          <option>4 Months</option>
+                          <option>6 Months</option>
+                          <option>8 Months</option>
+                          <option>10 Months</option>
+                          <option>12 Months</option>
+                      </select>
+                    </div>
+  
+  
+       
+                              <div class="mt-3">
+                                <button class="cmn-btn" onclick="save()">Submit</button>
+                              </div>
+                            </form>
+                           
+                          </div>
+              <%}%>
+             
 
 
-     
-                            <div class="mt-3">
-                              <button class="cmn-btn" onclick="save()">Submit</button>
-                            </div>
-                          </form>
-                         
-                        </div>
                       </div>
                     </div>
                   </div>
