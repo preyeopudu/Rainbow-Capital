@@ -45,7 +45,7 @@
                   <form action="/<%=user.username%>/save" method="POST" class="mt-4">
                     
                     <div class="form-group">
-                      <input type="number" name="amount" class="form-control" placeholder="Input Amount"  required>
+                      <input type="number" name="amount" class="form-control" placeholder="Input Amount" min="10000"  required>
                       
                       <select type="text" name="time" class="form-control"  required style="margin-top: 40px;">
                           <option>2 Months</option>

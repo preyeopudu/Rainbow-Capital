@@ -151,15 +151,20 @@ app.get("/saving", isLoggedIn, (req, res) => {
       console.log(err);
       res.redirect("/saving");
     } else {
-      if (new Date() >= user.savings[0].matureDate) {
-        if (err) {
-          console.log(err);
+      if (user.savings.length > 0) {
+        if (new Date() >= user.savings[0].matureDate) {
+          if (err) {
+            console.log(err);
+          } else {
+            user.interest =
+              Number(user.interest) + Number(user.savings[0].cost);
+            user.savings.pop();
+            user.save(() => {
+              res.render("saving", { user: req.user });
+            });
+          }
         } else {
-          user.interest = Number(user.interest) + Number(user.savings[0].cost);
-          user.savings.pop();
-          user.save(() => {
-            res.render("saving", { user: req.user });
-          });
+          res.render("saving", { user: req.user });
         }
       } else {
         res.render("saving", { user: req.user });
