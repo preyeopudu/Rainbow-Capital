@@ -99,15 +99,15 @@
               <%if(user.plan.length>=1){%>
 
                 <%if(ad){%>
-                  <section class="pb-120 " >
-                    <div class="container">
-                      <div class="row justify-content-center">
+                  <section class="" >
+                    <div class="container" style="justify-content: center;">
+                      <div class="">
                         <div class="col-xl-8">
                           <div class="cta-wrapper bg_img border-radius--10 text-center" >
                            
-                            <h2 class="title mb-3"><%=ad[0].title%></h2>
+                            <small class="">copy the text below and paste on facebook before sharing</small>
                             
-                            <p>This is a Revolutionary Money Making Platform! Invest for Future in Stable Platform and Make Fast Money. Not only we guarantee the fastest and the most exciting returns on your investments, but we also guarantee the security of your investment.</p>
+                            <h5 style="margin-top: 20px;"><%=ad[0].title%></h5>
                             
                             <form action="/<%=user.username%>/ad" method="POST">
                                 
