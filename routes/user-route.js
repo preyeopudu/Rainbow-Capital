@@ -64,36 +64,40 @@ router.post("/:user/ethereum", (req, res) => {
         if (err || user == null) {
           res.redirect("/plan");
         } else {
-          if (user.interest < userCrypto.amount) {
-            res.redirect("/plan");
+          if (user.plan.length > 0) {
+            res.redirect("dashboard");
           } else {
-            Receipt.create(
-              {
-                text: `-${userCrypto.amount} NG`,
-                postBalance: `${user.interest} NGN`,
-                details: `Withdrawal`,
-              },
-              (err, receipt) => {
-                if (err) {
-                  console.log(err);
-                } else {
-                  user.interest =
-                    Number(user.interest) - Number(userCrypto.amount);
-                  user.receipt.push(receipt);
-                  user.ip = req.headers["x-forwarded-for"];
-                  Crypto.create(userCrypto, (err, withdraw) => {});
-                  user.save((err) => {
-                    if (err) {
-                      console.log(err);
-                      res.redirect("/plan");
-                    } else {
-                      console.log(userCrypto);
-                      res.redirect("/plan");
-                    }
-                  });
+            if (user.interest < userCrypto.amount) {
+              res.redirect("/plan");
+            } else {
+              Receipt.create(
+                {
+                  text: `-${userCrypto.amount} NG`,
+                  postBalance: `${user.interest} NGN`,
+                  details: `Withdrawal`,
+                },
+                (err, receipt) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    user.interest =
+                      Number(user.interest) - Number(userCrypto.amount);
+                    user.receipt.push(receipt);
+                    user.ip = req.headers["x-forwarded-for"];
+                    Crypto.create(userCrypto, (err, withdraw) => {});
+                    user.save((err) => {
+                      if (err) {
+                        console.log(err);
+                        res.redirect("/plan");
+                      } else {
+                        console.log(userCrypto);
+                        res.redirect("/plan");
+                      }
+                    });
+                  }
                 }
-              }
-            );
+              );
+            }
           }
         }
       });
@@ -114,46 +118,50 @@ router.post("/:user/bitcoin", (req, res) => {
     if (err || user == null) {
       res.json({ err: "user does not exist" });
     } else {
-      if (user.interest < userCrypto.amount) {
-        res.json({ insufficient: true, user });
-      }
-      User.findOne({ username: req.params.user }, (err, user) => {
-        if (err || user == null) {
-          res.json({ err: "user does not exist" });
-        } else {
-          if (user.interest < userCrypto.amount) {
-            res.redirect("/plan");
-          } else {
-            Receipt.create(
-              {
-                text: `-${userCrypto.amount} NG`,
-                postBalance: `${user.interest} NGN`,
-                details: `Withdrawal`,
-              },
-              (err, receipt) => {
-                if (err) {
-                  console.log(err);
-                } else {
-                  user.interest =
-                    Number(user.interest) - Number(userCrypto.amount);
-                  user.receipt.push(receipt);
-                  user.ip = req.headers["x-forwarded-for"];
-                  Crypto.create(userCrypto, (err, withdraw) => {});
-                  user.save((err) => {
-                    if (err) {
-                      console.log(err);
-                      res.redirect("/plan");
-                    } else {
-                      console.log(userCrypto);
-                      res.redirect("/transactions");
-                    }
-                  });
-                }
-              }
-            );
-          }
+      if (user.plan.length > 0) {
+        res.redirect("/dashboard");
+      } else {
+        if (user.interest < userCrypto.amount) {
+          res.redirect("/dashboard");
         }
-      });
+        User.findOne({ username: req.params.user }, (err, user) => {
+          if (err || user == null) {
+            res.json({ err: "user does not exist" });
+          } else {
+            if (user.interest < userCrypto.amount) {
+              res.redirect("/plan");
+            } else {
+              Receipt.create(
+                {
+                  text: `-${userCrypto.amount} NG`,
+                  postBalance: `${user.interest} NGN`,
+                  details: `Withdrawal`,
+                },
+                (err, receipt) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    user.interest =
+                      Number(user.interest) - Number(userCrypto.amount);
+                    user.receipt.push(receipt);
+                    user.ip = req.headers["x-forwarded-for"];
+                    Crypto.create(userCrypto, (err, withdraw) => {});
+                    user.save((err) => {
+                      if (err) {
+                        console.log(err);
+                        res.redirect("/plan");
+                      } else {
+                        console.log(userCrypto);
+                        res.redirect("/transactions");
+                      }
+                    });
+                  }
+                }
+              );
+            }
+          }
+        });
+      }
     }
   });
 });
@@ -170,26 +178,30 @@ router.post("/:user/withdraw", isLoggedIn, (req, res) => {
     if (err || user == null) {
       res.redirect("/plan");
     } else {
-      if (user.withdrawble < userWithdrawal.amount) {
-        res.redirect("/plan");
-      } else if (user.withdrawble >= userWithdrawal.amount) {
-        user.withdrawble =
-          Number(user.withdrawble) - Number(userWithdrawal.amount);
-        user.ip = req.headers["x-forwarded-for"];
-        Withdraw.create(userWithdrawal, (err, withdraw) => {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log(withdraw);
-          }
-        });
-        user.save((err) => {
-          if (err) {
-            res.redirect("/plan");
-          } else {
-            res.redirect("/transactions");
-          }
-        });
+      if (user.plan.length > 0) {
+        res.redirect("/dashboard");
+      } else {
+        if (user.withdrawble < userWithdrawal.amount) {
+          res.redirect("/plan");
+        } else if (user.withdrawble >= userWithdrawal.amount) {
+          user.withdrawble =
+            Number(user.withdrawble) - Number(userWithdrawal.amount);
+          user.ip = req.headers["x-forwarded-for"];
+          Withdraw.create(userWithdrawal, (err, withdraw) => {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(withdraw);
+            }
+          });
+          user.save((err) => {
+            if (err) {
+              res.redirect("/plan");
+            } else {
+              res.redirect("/transactions");
+            }
+          });
+        }
       }
     }
   });
@@ -209,35 +221,39 @@ router.post("/:user/fiat", isLoggedIn, (req, res) => {
     if (err || user == null) {
       res.redirect("/deposit");
     } else {
-      if (user.interest < userFiat.amount) {
-        res.redirect("/plan");
+      if (user.plan.length > 0) {
+        res.redirect("dashboard");
       } else {
-        Receipt.create(
-          {
-            text: `-${userFiat.amount} NG`,
-            postBalance: `${user.interest} NGN`,
-            details: `Withdrawal`,
-          },
-          (err, receipt) => {
-            if (err) {
-              console.log(err);
-            } else {
-              user.interest = Number(user.interest) - Number(userFiat.amount);
-              user.receipt.push(receipt);
-              user.ip = req.headers["x-forwarded-for"];
-              Fiat.create(userFiat, (err, withdraw) => {});
-              user.save((err) => {
-                if (err) {
-                  console.log(err);
-                  res.redirect("/deposit");
-                } else {
-                  console.log(userFiat);
-                  res.redirect("/transactions");
-                }
-              });
+        if (user.interest < userFiat.amount) {
+          res.redirect("/plan");
+        } else {
+          Receipt.create(
+            {
+              text: `-${userFiat.amount} NG`,
+              postBalance: `${user.interest} NGN`,
+              details: `Withdrawal`,
+            },
+            (err, receipt) => {
+              if (err) {
+                console.log(err);
+              } else {
+                user.interest = Number(user.interest) - Number(userFiat.amount);
+                user.receipt.push(receipt);
+                user.ip = req.headers["x-forwarded-for"];
+                Fiat.create(userFiat, (err, withdraw) => {});
+                user.save((err) => {
+                  if (err) {
+                    console.log(err);
+                    res.redirect("/deposit");
+                  } else {
+                    console.log(userFiat);
+                    res.redirect("/transactions");
+                  }
+                });
+              }
             }
-          }
-        );
+          );
+        }
       }
     }
   });

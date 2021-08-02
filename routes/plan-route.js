@@ -18,7 +18,8 @@ function isLoggedIn(req, res, next) {
   res.redirect("/auth/signin");
 }
 
-router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
+router.post("/:user/plan/:plan", (req, res) => {
+  console.log(0);
   planName = req.params.plan;
   let bonus;
   let plan;
@@ -88,14 +89,22 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
   }
 
   User.findOne({ username: req.params.user }, (err, user) => {
+    console.log(1);
     if (err || user == null) {
+      res.redirect("/dashboard");
+      console.log(1);
       console.log(err);
     } else {
+      console.log(2);
       if (user.plan.length > 0) {
+        console.log("3");
         res.redirect("/dashboard");
       } else if (user.plan.length == 0) {
+        console.log(4);
         if (user.interest >= plan.cost || user.deposit >= plan.cost) {
+          console.log(5);
           Plan.create(plan, (err, plan) => {
+            console.log(6);
             Receipt.create(
               {
                 text: `- ${plan.cost} NGN`,
@@ -113,14 +122,22 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
                     { username: user.referee },
                     (err, foundrefree) => {
                       if (err || foundrefree == null) {
+                        console.log(6);
                         user.plan.push(plan);
                         user.active = true;
                         user.bonus = true;
                         user.receipt.push(receipt);
-                        user.save(() => {
+                        console.log(10);
+                        user.save((err) => {
+                          console.log(11);
+                          if (err) {
+                            console.log(err);
+                          }
+                          console.log("12");
                           res.redirect("/transactions");
                         });
                       } else {
+                        console.log(7);
                         if (user.username != foundrefree.username) {
                           Referal.create(
                             { userName: user.username, amount: bonus },
@@ -149,7 +166,22 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
                           user.bonus = true;
                           user.receipt.push(receipt);
                           user.plan.push(plan);
-                          user.save(() => {
+                          user.save((err) => {
+                            if (err) {
+                              console.log(err);
+                            }
+                            console.log(8);
+                            res.redirect("/transactions");
+                          });
+                        } else {
+                          user.active = true;
+                          user.bonus = true;
+                          user.receipt.push(receipt);
+                          user.save((err) => {
+                            if (err) {
+                              console.log(err);
+                            }
+                            console.log(8);
                             res.redirect("/transactions");
                           });
                         }
@@ -161,14 +193,20 @@ router.post("/:user/plan/:plan", isLoggedIn, (req, res) => {
                   user.active = true;
                   user.receipt.push(receipt);
                   user.plan.push(plan);
-                  user.save(() => {
-                    res.redirect("/transactions");
+                  user.save((err) => {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      console.log(9);
+                      res.redirect("/transactions");
+                    }
                   });
                 }
               }
             );
           });
         } else {
+          console.log(10);
           res.redirect("/deposit");
         }
       }
