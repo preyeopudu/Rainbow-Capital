@@ -65,7 +65,7 @@ router.post("/:user/ethereum", (req, res) => {
           res.redirect("/plan");
         } else {
           if (user.plan.length > 0) {
-            res.redirect("dashboard");
+            res.redirect("/dashboard");
           } else {
             if (user.interest < userCrypto.amount) {
               res.redirect("/plan");
@@ -222,7 +222,7 @@ router.post("/:user/fiat", isLoggedIn, (req, res) => {
       res.redirect("/deposit");
     } else {
       if (user.plan.length > 0) {
-        res.redirect("dashboard");
+        res.redirect("/dashboard");
       } else {
         if (user.interest < userFiat.amount) {
           res.redirect("/plan");
