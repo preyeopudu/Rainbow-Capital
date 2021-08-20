@@ -28,7 +28,6 @@ router.post("/auth/otp", (req, res) => {
             auth: {
               user: "splashdev20@gmail.com",
               pass: "programmer8",
-              secure: true,
             },
           });
 
