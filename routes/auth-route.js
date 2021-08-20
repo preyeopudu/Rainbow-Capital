@@ -24,9 +24,11 @@ router.post("/auth/otp", (req, res) => {
         } else {
           let transporter = nodemailer.createTransport({
             service: "gmail",
+            secure: true,
             auth: {
               user: "splashdev20@gmail.com",
               pass: "programmer8",
+              secure: true,
             },
           });
 
