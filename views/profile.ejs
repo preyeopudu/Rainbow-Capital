@@ -1,0 +1,179 @@
+<!-- meta tags and other links -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rainbow Capitals</title>
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" sizes="16x16">
+  <link rel="stylesheet" href="/assets/css/news-slider.css">
+  <!-- bootstrap 4  -->
+  <link rel="stylesheet" href="/assets/css/vendor/bootstrap.min.css">
+  <!-- fontawesome 5  -->
+  <link rel="stylesheet" href="/assets/css/all.min.css">
+  <!-- line-awesome webfont -->
+  <link rel="stylesheet" href="/assets/css/line-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/vendor/animate.min.css">
+  <!-- slick slider css -->
+  <link rel="stylesheet" href="/assets/css/vendor/slick.css">
+  <link rel="stylesheet" href="/assets/css/vendor/dots.css">
+  <!-- dashdoard main css -->
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.css" integrity="sha512-UTNP5BXLIptsaj5WdKFrkFov94lDx+eBvbKyoe1YAfjeRPC+gT5kyZ10kOHCfNZqEui1sxmqvodNUx3KbuYI/A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+  <meta property="og:url"           content="https://www.rainbowcapital.org/" />
+<meta property="og:type"          content="website" />
+<meta property="og:title"         content="Your Website Title" />
+<meta property="og:description"   content="Your description" />
+<meta property="og:image"         content="https://www.your-domain.com/path/image.jpg" />
+</head>
+</head>
+
+<body>
+    <div class="preloader">
+      <div class="preloader-container">
+        <span class="animated-preloader"></span>
+      </div>
+    </div>
+  
+    <!-- scroll-to-top start -->
+    <div class="scroll-to-top">
+      <span class="scroll-icon">
+        <i class="fa fa-rocket" aria-hidden="true"></i>
+      </span>
+    </div>
+    <!-- scroll-to-top end -->
+
+  <div class="full-wh">
+    <!-- STAR ANIMATION -->
+    <div class="bg-animation">
+      <div id='stars'></div>
+      <div id='stars2'></div>
+      <div id='stars3'></div>
+      <div id='stars4'></div>
+    </div><!-- / STAR ANIMATION -->
+  </div>
+  <div class="page-wrapper">
+      <!-- header-section start  -->
+  <header class="header">
+    <div class="header__bottom">
+      <div class="container">
+
+        <nav class="navbar navbar-expand-xl p-0 align-items-center">
+          <!-- <a class="navbar-brand" href="#">
+            <img src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="30" height="24">
+          </a> -->
+          <a class="navbar navbar-brand " href="/profile">
+            <div class="picture">
+              <%if(user.image.length>=1){%>
+                <img src="data:image/<%=user.image[0].img.contentType%>;base64,
+                <%=user.image[user.image.length-1].img.data.toString('base64')%>"  alt="" width="80" height="80" class="d-inline-block rounded align-text-top" >
+                <%}else{%>
+                  <img src="assets/images/Profile.png" height="20" width="4" alt="site-logo">
+                  <%}%> 
+            </div>
+            
+         
+          
+          </a>
+          <ul class="account-menu mobile-acc-menu">
+            <li class="icon">
+              <a href="/logout"><i class="las la-user"></i></a>
+            </li>
+          </ul> 
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="menu-toggle"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav main-menu m-auto">
+
+              <li><a href="/dashboard">Your Dashboard</a></li>
+              <li><a href="/transactions">Transactions</a></li>
+              <li> <a href="/plan">Invest</a></li>
+              <li> <a href="/payment">Payments</a></li>
+              <li> <a href="/deposit">Coupon</a></li>
+              <li> <a href="/withdraw">Withdraw</a></li>
+              <li><a href="/blog">News</a></li>
+              <li><a href="/saving">Saving</a></li>
+           
+            </ul>
+            <div class="nav-right">
+              <ul class="account-menu ml-3">
+                <li class="icon">
+                  <a href="/logout"><i class="las la-user"></i></a>
+                </li>
+              </ul> 
+
+            </div>
+          </div> 
+        </nav>
+      </div>
+      <!-- <div style="align-content: center; ">
+        <div class="alert alert-dark"  style="text-align: center;;margin-bottom: 30px;margin-top: 30px;" role="alert">
+          <h5>Error occured here</h5>
+          <!-- <%=error%> -->
+        </div>
+      </div>
+    </div><!-- header__bottom end -->
+   
+    
+  </header>
+  
+  
+  <div class="account-section justify-content-center" >
+    <div class="container justify-content-center">
+    
+      <div class="row justify-content-center">
+        
+        <div class="col-xl-5 col-lg-7 justify-content-center">
+          <div class="account-card  justify-content-center">
+            <form action="/profile" method="POST" class="mt-4" enctype="multipart/form-data">
+            <div class="container">
+                <div class="picture-container">
+                    <div class="picture">
+                      <%if(user.image.length>=1){%>
+                        <img src="data:image/<%=user.image[0].img.contentType%>;base64,
+                        <%=user.image[user.image.length-1].img.data.toString('base64')%>" class="picture-src" id="wizardPicturePreview" title="">
+                        <input type="file" name="file" id="wizard-picture" class="">
+                        <%}else{%>
+                          <img src="https://lh3.googleusercontent.com/LfmMVU71g-HKXTCP_QWlDOemmWg4Dn1rJjxeEsZKMNaQprgunDTtEuzmcwUBgupKQVTuP0vczT9bH32ywaF7h68mF-osUSBAeM6MxyhvJhG6HKZMTYjgEv3WkWCfLB7czfODidNQPdja99HMb4qhCY1uFS8X0OQOVGeuhdHy8ln7eyr-6MnkCcy64wl6S_S6ep9j7aJIIopZ9wxk7Iqm-gFjmBtg6KJVkBD0IA6BnS-XlIVpbqL5LYi62elCrbDgiaD6Oe8uluucbYeL1i9kgr4c1b_NBSNe6zFwj7vrju4Zdbax-GPHmiuirf2h86eKdRl7A5h8PXGrCDNIYMID-J7_KuHKqaM-I7W5yI00QDpG9x5q5xOQMgCy1bbu3St1paqt9KHrvNS_SCx-QJgBTOIWW6T0DHVlvV_9YF5UZpN7aV5a79xvN1Gdrc7spvSs82v6gta8AJHCgzNSWQw5QUR8EN_-cTPF6S-vifLa2KtRdRAV7q-CQvhMrbBCaEYY73bQcPZFd9XE7HIbHXwXYA=s200-no" class="picture-src" id="wizardPicturePreview" title="">
+
+                          <%}%>   <input type="file" name="file" id="wizard-picture" class="">
+                    </div>
+                     <p class="">Choose Picture</p>
+            
+                </div>
+            </div>
+            <div class="mt-3">
+              <button class="cmn-btn">Submit</button>
+            </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+      $(document).ready(function(){
+// Prepare the preview for profile picture
+    $("#wizard-picture").change(function(){
+        readURL(this);
+    });
+});
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#wizardPicturePreview').attr('src', e.target.result).fadeIn('slow');
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+  </script>
+
+    <%- include ('./partials/footer');%>

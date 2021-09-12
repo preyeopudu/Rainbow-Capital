@@ -4,6 +4,7 @@ const Receipt = require("./receipt");
 const Plan = require("./plan");
 const Referal = require("./referal");
 const Saving = require("./saving");
+const Image=require('./images')
 
 const userSchema = new mongoose.Schema({
   username: String,
@@ -19,6 +20,7 @@ const userSchema = new mongoose.Schema({
   isReferred: { type: Boolean, default: false },
   referee: String,
 
+  image:[Image.schema],
   plan: [Plan.schema],
   receipt: [Receipt.schema],
   referals: [Referal.schema],

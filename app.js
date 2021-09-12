@@ -1,9 +1,14 @@
 const express = require("express");
 var cors = require("cors");
 const app = express();
-
 const mongoose = require("mongoose");
+const multer=require('multer')
+const fs=require('fs')
+
+
 app.use(cors());
+
+
 
 // const uri = "mongodb://localhost:27017/rainbow";
 const uri =
@@ -16,6 +21,7 @@ mongoose
   })
   .catch((err) => console.log(err));
 
+
 const stackRoutes = require("./routes/plan-route");
 const authRoutes = require("./routes/auth-route");
 const adminRoutes = require("./routes/admin-route");
@@ -23,6 +29,9 @@ const userRoutes = require("./routes/user-route");
 const Stack = require("./model/plan");
 const Receipt = require("./model/receipt");
 const User = require("./model/user");
+const fa=require('fs')
+const path=require('path');
+require('dotenv/config')
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const flash = require("connect-flash");
@@ -31,6 +40,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const Withdraw = require("./model/withdraw");
 const Plan = require("./model/plan");
 const Ad = require("./model/ad");
+const imgModel=require('./model/images')
 const Notification = require("./model/notification");
 const notification = require("./model/notification");
 const { use } = require("./routes/user-route");
@@ -78,9 +88,76 @@ function isLoggedIn(req, res, next) {
   res.redirect("auth/signin");
 }
 
-app.get("/", (req, res) => {
-  res.render("index");
+// Step 5 - set up multer for storing uploaded files
+
+
+
+const storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, 'uploads')
+	},
+	filename: (req, file, cb) => {
+		cb(null, file.fieldname + '-' + Date.now())
+	}
 });
+
+var upload = multer({ storage: storage });
+
+
+
+app.get("/", (req, res) => {
+
+  Notification.find({},(err,notification)=>{
+    if(err){
+      console.log(err)
+    }else{
+      
+      res.render("index",{notification:notification.reverse()})
+    }
+  })
+
+});
+
+
+// Step 8 - the POST handler for processing the uploaded file
+
+app.post('/profile', upload.single('file'), (req, res, next) => {
+
+	var obj = {
+		name: req.body.name,
+		desc: req.body.desc,
+		img: {
+			data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+			contentType: 'image/png'
+		}
+	}
+	imgModel.create(obj, (err, item) => {
+		if (err) {
+			console.log(err);
+		}
+		else {
+      User.findOne({ username: req.user.username },(err,user)=>{
+        if(err){
+          console.log(err)
+        }else{
+          user.image=[]
+          user.image.push(item)
+          user.save((err)=>{
+            if(err){
+              console.log(err)
+            }else{
+              res.redirect('/profile')
+            }
+          })
+
+        }
+      })
+			// item.save();
+		}
+	});
+});
+
+
 
 app.get("/dashboard", isLoggedIn, (req, res) => {
   Ad.find({}, (err, ad) => {

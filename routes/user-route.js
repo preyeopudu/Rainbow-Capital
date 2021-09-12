@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const imgModel=require('../model/images')
 const mongoose = require("mongoose");
 const User = require("../model/user");
 const Withdraw = require("../model/withdraw");
@@ -28,9 +29,22 @@ function isLoggedIn(req, res, next) {
   res.redirect("auth/signin");
 }
 
+
+
 router.get("/transactions", isLoggedIn, (req, res) => {
   res.render("transactions", { user: req.user });
 });
+
+router.get("/profile",isLoggedIn,(req,res)=>{
+ 
+      res.render("profile",{user:req.user})
+    
+ 
+})
+
+
+
+// router.post("/profile",uploadController.uploadFile)
 
 router.get("/withdraw", isLoggedIn, (req, res) => {
   res.render("withdraw", { user: req.user });

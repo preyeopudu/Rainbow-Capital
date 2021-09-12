@@ -1,4 +1,5 @@
 <%- include ('./partials/header2');%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
 
 <!-- hero start -->
 <section class="hero bg_img" data-background="assets/images/bg/gem.jpg">
@@ -12,6 +13,8 @@
             >
             <b class="base--color">and earn passive income</b>
           </h2>
+
+       
           <p class="text-white f-size-18 mt-3">
             Invest in an Industry Leader, Professional, and Reliable Company. We
             provide you with the most necessary features that will make your
@@ -31,14 +34,46 @@
 </section>
 <!-- hero end -->
 
+<div class="container">
+  <div class="row">
+    
+    <div class="col-md-12">
+      <h1 style="margin-bottom: 40px;margin-left: 30px;">Recent post</h1>
+      <div id="news-slider" class="owl-carousel">
+        <% notification.forEach(function(blog){%>
+          <div class="post-slide">
+            <div class="post-img">
+  
+              <div class="post-review">
+                <ul class="post-bar">
+                  <li><i class="fa fa-calendar-week"></i> <%=blog.date.toLocaleDateString()%></li>
+                  <li><i class="fa fa-user"></i> Rainbow Capitals</li>
+                </ul>
+                <h3 class="post-titile"><%=blog.title%></h3>
+                <p class="post-description"><%=blog.text.substring(1,90)%></p>
+                <a href="/blog/<%=blog._id%>" class="read stretched-link">Read more <i class="fa fa-angle-right"></i></a>
+              </div>
+            </div>
+          </div>
+          <%})%>
+
+  
+     
+ 
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- about section start -->
+<div class="container">
 <section
   class="pt-120 pb-120 overlay--radial bg_img"
-  data-background="assets/images/bg/stack.jpg"
+  
 >
   <section style="display: flex; flex-direction: column; align-items: center">
     <video style="height: 600px; width: 100%" controls autoplay loop>
-      <source type="video/mp4" src="assets/images/ad.mp4" />
+      <source type="video/mp4" src="assets/images/rain.mp4" />
     </video>
   </section>
 
@@ -63,9 +98,11 @@
     </div>
   </div>
 </section>
+</div>
 <!-- about section end -->
 
 <!-- package section start -->
+<div class="container">
 <section
   class="pt-120 pb-120 bg_img"
   data-background="assets/images/bg/gem.jpg"
@@ -217,12 +254,13 @@
     <!-- row end -->
   </div>
 </section>
+</div>
 <!-- package section end  -->
 
 <!-- choose us section start -->
 <section
   class="pt-120 pb-120 overlay--radial bg_img"
-  data-background="assets/images/bg/row.jpg"
+  data-background="assets/images/bg/row.jpg" style="margin-top: 30px;"
 >
   <div class="container">
     <div class="row justify-content-center">
