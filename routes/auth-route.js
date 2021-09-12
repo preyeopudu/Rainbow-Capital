@@ -23,33 +23,53 @@ router.post("/auth/otp", (req, res) => {
           console.log(err);
         } else {
           let transporter = nodemailer.createTransport({
-            service: "gmail",
-            secure: true,
+            host: "smtp.ethereal.email",
+            port: 587,
+            secure: false, // true for 465, false for other ports
             auth: {
-              user: "splashdev20@gmail.com",
-              pass: "programmer8",
+              user: 'adan.schmidt4@ethereal.email',
+              pass: 'GBTvQk5hMBjutTDqEP'
             },
           });
-
-          let mailOptions = {
-            from: "RainbowCapitals",
-            to: `${email}`,
-            subject: "RainbowsCapital OTP",
-            text: `your signup code : ${otpcode}`,
-          };
-
-          transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              console.log(error);
-              res.send("failed to send OTP");
-              res.redirect("/auth/otp");
-              console.log({ sent: false });
-            } else {
-              console.log("Email sent :" + info.response);
-              res.redirect("/auth/otp");
-              console.log({ sent: true });
-            }
+        
+          // send mail with defined transport object
+          let info = await transporter.sendMail({
+            from: '"Rainbowcapital.org', // sender address
+            to:  `${email}`, // list of receivers
+            subject: "Glad to have you with us ✔", // Subject line
+            text: `${otp}`, // plain text body
+            html: "<b>Welcome to Rainbow Capitals?</b>", // html body
           });
+          res.redirect('/auth/otp')
+          console.log("Message sent: %s", info.messageId);
+          // let transporter = nodemailer.createTransport({
+          //   service: "gmail",
+          //   secure: true,
+          //   auth: {
+          //     user: "splashdev20@gmail.com",
+          //     pass: "programmer8",
+          //   },
+          // });
+
+          // let mailOptions = {
+          //   from: "RainbowCapitals",
+          //   to: `${email}`,
+          //   subject: "RainbowsCapital OTP",
+          //   text: `your signup code : ${otpcode}`,
+          // };
+
+          // transporter.sendMail(mailOptions, (error, info) => {
+          //   if (error) {
+          //     console.log(error);
+          //     res.send("failed to send OTP");
+          //     res.redirect("/auth/otp");
+          //     console.log({ sent: false });
+          //   } else {
+          //     console.log("Email sent :" + info.response);
+          //     res.redirect("/auth/otp");
+          //     console.log({ sent: true });
+          //   }
+          // });
 
           //  res.json({otp});
           console.log(otpcode);
