@@ -183,11 +183,45 @@
                             </div>
                           </form>
                          
+                    </div>
+                    <div class="container">
+                      <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="adress"  value="0x41520Dce6108C288DE4682133C7E14f83C261E22" aria-label="Recipient's username" aria-describedby="button-addon2" readonly>
+                        <button  onclick="myFunction()" class="btn cmn-btn btn-outline-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-copy"></i></button>
+                      </div>
+                      <label>Rainbow Capitals USDT BEP20 wallet address</label>
+  
+                    </div>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade account-card__body" style="background-color: black;" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog account-card__body" style="background-color: black;">
+                        <div class="modal-content account-card__body" style="background-color: black;">
+                          <div class="modal-header" style="background-color: black;">
+                            <h5 class="modal-title" id="exampleModalLabel">Successfully copied our USDT BEP20 address</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body " style="background-color: black;">
+                          
+                              <li>Send USDT(BEP20) equivalent to the amount you want in your RC interest wallet</p>
+                              <li>Forward screenshot of successful Transaction to our mail</p>
+                              <li>rainbowarbritage@gmail.com</p>
+                       
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <a class="btn btn-primary" href="mailto:rainbowarbritage@gmail.com">Mail</a>
+                            <!-- <button type="button" class="btn btn-primary">Forward Mail</button> -->
+                          </div>
                         </div>
+                      </div>
+                    </div>
 
 
                    
                       </div>
+
+                    
                     </div>
                   </div>
 
@@ -214,7 +248,7 @@
 
                     <div class="col-xl-3 col-lg-4 col-md-6 mb-30" >
                       <div class="package-card text-center bg_img">
-                        <h4 class="package-card__title base--color mb-2">RC representative</h4>
+                        <h5 class="package-card__title base--color mb-2">RC representative</h5>
                       
                         <div class="package-card__range mt-5 base--color">Kehinde Phillips</div>
                         <p class="base--color" style="font-size: smaller;">Certified by Rainbow Capitals</p>
@@ -250,6 +284,23 @@
   <!-- dashboard custom js -->
   <script src="/assets/js/app.js"></script>
   <script src="/assets/js/vendor/bootstrap.min.js"></script>
+
+  <script>
+    function myFunction() {
+  /* Get the text field */
+  var copyText = document.getElementById("adress");
+
+  /* Select the text field */
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+   /* Copy the text inside the text field */
+  navigator.clipboard.writeText(copyText.value);
+
+  /* Alert the copied text */
+  
+}
+  </script>
 
   </body>
 </html>
