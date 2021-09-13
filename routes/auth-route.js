@@ -4,8 +4,11 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const User = require("../model/user");
 const Otp = require("../model/otp");
-const nodemailer = require("nodemailer");
 const { route } = require("./user-route");
+const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
+const OAuth2 = google.auth.OAuth2;
+
 
 router.post("/auth/otp", (req, res) => {
   let otpcode = Math.floor(Math.random() * 900000 + 100000);
@@ -22,56 +25,33 @@ router.post("/auth/otp", (req, res) => {
         if (err) {
           console.log(err);
         } else {
+
           let transporter = nodemailer.createTransport({
-            host: "smtp.ethereal.email",
-            port: 587,
-            secure: false, // true for 465, false for other ports
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
             auth: {
-              user: 'adan.schmidt4@ethereal.email',
-              pass: 'GBTvQk5hMBjutTDqEP'
-            },
-          });
+                type: 'OAuth2',
+                clientId: '669866620315-sh1pqk2r43d8ia20unni5ebootc2ut2e.apps.googleusercontent.com',
+                clientSecret: 'I1bNTAXVunzBZ-CkrhtXzsmv'
+            }
+        });
         
-          // send mail with defined transport object
-          let info = await transporter.sendMail({
-            from: '"Rainbowcapital.org', // sender address
-            to:  `${email}`, // list of receivers
-            subject: "Glad to have you with us ✔", // Subject line
-            text: `${otp}`, // plain text body
-            html: "<b>Welcome to Rainbow Capitals?</b>", // html body
-          });
-          res.redirect('/auth/otp')
-          console.log("Message sent: %s", info.messageId);
-          // let transporter = nodemailer.createTransport({
-          //   service: "gmail",
-          //   secure: true,
-          //   auth: {
-          //     user: "splashdev20@gmail.com",
-          //     pass: "programmer8",
-          //   },
-          // });
+        transporter.sendMail({
+            from: 'splashdev20@gmail.com',
+            to: `${email}`,
+            subject: 'Welcome to Rainbow Capitals',
+            text: `your OTP : ${otp.code}`,
+            auth: {
+                user: 'splashdev20@gmail.com',
+                refreshToken: '1//04gTLYzmaUfiaCgYIARAAGAQSNwF-L9IrQDRkWFktmGZhXphHeWogsxG0FKz8WG5b0lDTCEFOzJrzxBZrRWLX7MPuuNxC18znRqs',
+                accessToken: 'ya29.a0ARrdaM9jgwl0hEeglYBzcoibx8kJRwPgp-LYfYKWrTwWzlLqjNxhjiSwRk3LMzjRB0x6LjuA-r4yrJmmQ3-fpfY3mbKQ5NWhR8Jjg1Pmbxk4jlV-CaTZC2tRyDNbzfW1Y-3OHpH7QCQrmM-Pot_wrBMGDEq3',
+             
+            }
+        });
+      
 
-          // let mailOptions = {
-          //   from: "RainbowCapitals",
-          //   to: `${email}`,
-          //   subject: "RainbowsCapital OTP",
-          //   text: `your signup code : ${otpcode}`,
-          // };
-
-          // transporter.sendMail(mailOptions, (error, info) => {
-          //   if (error) {
-          //     console.log(error);
-          //     res.send("failed to send OTP");
-          //     res.redirect("/auth/otp");
-          //     console.log({ sent: false });
-          //   } else {
-          //     console.log("Email sent :" + info.response);
-          //     res.redirect("/auth/otp");
-          //     console.log({ sent: true });
-          //   }
-          // });
-
-          //  res.json({otp});
+        res.redirect("/auth/otp")
           console.log(otpcode);
         }
       });
