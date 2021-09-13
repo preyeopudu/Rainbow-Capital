@@ -26,6 +26,18 @@ router.post("/auth/otp", (req, res) => {
           console.log(err);
         } else {
 
+          const oauth2Client = new OAuth2(
+            '669866620315-sh1pqk2r43d8ia20unni5ebootc2ut2e.apps.googleusercontent.com',
+            'I1bNTAXVunzBZ-CkrhtXzsmv',
+            "https://developers.google.com/oauthplayground" // Redirect URL
+       );
+
+       oauth2Client.setCredentials({
+        refresh_token: "1//04gTLYzmaUfiaCgYIARAAGAQSNwF-L9IrQDRkWFktmGZhXphHeWogsxG0FKz8WG5b0lDTCEFOzJrzxBZrRWLX7MPuuNxC18znRqs"
+      });
+      const accessToken = oauth2Client.getAccessToken()
+
+
           let transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 465,
@@ -45,7 +57,7 @@ router.post("/auth/otp", (req, res) => {
             auth: {
                 user: 'splashdev20@gmail.com',
                 refreshToken: '1//04gTLYzmaUfiaCgYIARAAGAQSNwF-L9IrQDRkWFktmGZhXphHeWogsxG0FKz8WG5b0lDTCEFOzJrzxBZrRWLX7MPuuNxC18znRqs',
-                accessToken: 'ya29.a0ARrdaM9jgwl0hEeglYBzcoibx8kJRwPgp-LYfYKWrTwWzlLqjNxhjiSwRk3LMzjRB0x6LjuA-r4yrJmmQ3-fpfY3mbKQ5NWhR8Jjg1Pmbxk4jlV-CaTZC2tRyDNbzfW1Y-3OHpH7QCQrmM-Pot_wrBMGDEq3',
+                accessToken: accessToken
              
             }
         });
