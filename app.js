@@ -31,7 +31,6 @@ const Receipt = require("./model/receipt");
 const User = require("./model/user");
 const fa=require('fs')
 const path=require('path');
-require('dotenv/config')
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const flash = require("connect-flash");
