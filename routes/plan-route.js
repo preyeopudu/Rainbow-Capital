@@ -23,7 +23,7 @@ router.post("/:user/plan/:plan", (req, res) => {
   planName = req.params.plan;
   let bonus;
   let plan;
-  if (planName == "student") {
+  if (planName == "rookie") {
     plan = {
       name: "ROOKIE",
       cost: 8000,
