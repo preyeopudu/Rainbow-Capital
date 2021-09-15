@@ -12,6 +12,8 @@ const Bill = require("../model/bill");
 const Coupon = require("../model/coupon");
 const Crypto = require("../model/crypto");
 
+
+
 User.register(
   new User({ username: "RainbowMen" }),
   "@RainbowCapitals2021",
