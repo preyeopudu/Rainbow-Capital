@@ -25,6 +25,16 @@ router.post("/:user/plan/:plan", (req, res) => {
   let plan;
   if (planName == "student") {
     plan = {
+      name: "ROOKIE",
+      cost: 8000,
+      daily: 380,
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
+        ._d,
+    };
+    bonus=400
+  }
+  else if (planName == "student") {
+    plan = {
       name: "STUDENT",
       cost: 18000,
       daily: 1242,
