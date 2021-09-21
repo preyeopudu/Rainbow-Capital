@@ -25,27 +25,11 @@ router.post("/auth/otp", (req, res) => {
         if (err) {
           console.log(err);
         } else {
-
-          const oauth2Client = new OAuth2(
-            '669866620315-sh1pqk2r43d8ia20unni5ebootc2ut2e.apps.googleusercontent.com',
-            'I1bNTAXVunzBZ-CkrhtXzsmv',
-            "https://developers.google.com/oauthplayground" // Redirect URL
-       );
-
-       oauth2Client.setCredentials({
-        refresh_token: "1//04gTLYzmaUfiaCgYIARAAGAQSNwF-L9IrQDRkWFktmGZhXphHeWogsxG0FKz8WG5b0lDTCEFOzJrzxBZrRWLX7MPuuNxC18znRqs"
-      });
-      const accessToken = oauth2Client.getAccessToken()
-
-
           let transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
+            host: 'gmail.com',
             auth: {
-                type: 'OAuth2',
-                clientId: '669866620315-sh1pqk2r43d8ia20unni5ebootc2ut2e.apps.googleusercontent.com',
-                clientSecret: 'I1bNTAXVunzBZ-CkrhtXzsmv'
+                username:"splashdev20@gmail.com",
+                pass:'programmer8'
             }
         });
         
@@ -54,12 +38,14 @@ router.post("/auth/otp", (req, res) => {
             to: `${email}`,
             subject: 'Welcome to Rainbow Capitals',
             text: `your OTP : ${otp.code}`,
-            auth: {
-                user: 'splashdev20@gmail.com',
-                refreshToken: '1//04gTLYzmaUfiaCgYIARAAGAQSNwF-L9IrQDRkWFktmGZhXphHeWogsxG0FKz8WG5b0lDTCEFOzJrzxBZrRWLX7MPuuNxC18znRqs',
-                accessToken: accessToken
-             
-            }
+        
+        },(error,info)=>{
+          if(error){
+            console.log(error)
+          }
+          else{
+            console.log("Email sent " + info.response)
+          }
         });
       
 
@@ -102,8 +88,7 @@ router.post("/auth/signup", (req, res) => {
       return res.send(err.message);
     }
     passport.authenticate("local")(req, res, () => {
-      res.send(true);
-      console.log(1);
+      res.redirect('/dashboard')
     });
   });
 });
