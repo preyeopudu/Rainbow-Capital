@@ -186,6 +186,7 @@ router.post("/:user/plan/:plan", (req, res) => {
                         } else {
                           user.active = true;
                           user.bonus = true;
+                          user.plan.push(plan);
                           user.receipt.push(receipt);
                           user.save((err) => {
                             if (err) {
