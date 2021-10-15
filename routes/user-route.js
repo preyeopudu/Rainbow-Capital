@@ -233,9 +233,11 @@ router.post("/:user/fiat", isLoggedIn, (req, res) => {
   console.log(userFiat);
   User.findOne({ username: req.params.user }, (err, user) => {
     if (err || user == null) {
+      console.log(err)
       res.redirect("/deposit");
     } else {
-      if (user.plan.length > 0) {
+      if (user.isOnPlan==true) {
+        console.log('error here!!')
         res.redirect("/dashboard");
       } else {
         if (user.interest < userFiat.amount) {
@@ -393,6 +395,7 @@ router.post("/:user/ad", isLoggedIn, (req, res) => {
             if (err) {
               res.json({ err });
             } else {
+              user.isOnPlan=false
               user.plan.pop();
               user.save(() => {
                 if (err) {
@@ -404,6 +407,7 @@ router.post("/:user/ad", isLoggedIn, (req, res) => {
             }
           });
         } else {
+          user.isOnPlan=true
           user.save((err) => {
             if (err) {
               console.log(err);

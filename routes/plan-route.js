@@ -8,7 +8,7 @@ const User = require("../model/user");
 const Referal = require("../model/referal");
 ///routes to all available stacks in billion traderx///
 
-const now = momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)._d;
+const now = momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(20)._d;
 console.log(now);
 
 function isLoggedIn(req, res, next) {
@@ -28,7 +28,7 @@ router.post("/:user/plan/:plan", (req, res) => {
       name: "ROOKIE",
       cost: 8000,
       daily: 380,
-      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(20)
         ._d,
     };
     bonus=400
@@ -38,7 +38,7 @@ router.post("/:user/plan/:plan", (req, res) => {
       name: "STUDENT",
       cost: 18000,
       daily: 1242,
-      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(20)
         ._d,
     };
     bonus = 900;
@@ -47,7 +47,7 @@ router.post("/:user/plan/:plan", (req, res) => {
       name: "ARTISANS",
       cost: 33000,
       daily: 2278,
-      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(20)
         ._d,
     };
     bonus = 1650;
@@ -56,7 +56,7 @@ router.post("/:user/plan/:plan", (req, res) => {
       name: "JOB HOLDERS",
       cost: 70000,
       daily: 4833,
-      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(20)
         ._d,
     };
     bonus = 3500;
@@ -65,7 +65,7 @@ router.post("/:user/plan/:plan", (req, res) => {
       name: "CIVIL",
       cost: 130000,
       daily: 8976,
-      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(20)
         ._d,
     };
     bonus = 6500;
@@ -74,7 +74,7 @@ router.post("/:user/plan/:plan", (req, res) => {
       name: "ENTREPRENEUR",
       cost: 300000,
       daily: 20714,
-      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(20)
         ._d,
     };
     bonus = 15000;
@@ -83,7 +83,7 @@ router.post("/:user/plan/:plan", (req, res) => {
       name: "PROFESSIONAL",
       cost: 640000,
       daily: 44190,
-      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(20)
         ._d,
     };
     bonus = 320000;
@@ -92,7 +92,7 @@ router.post("/:user/plan/:plan", (req, res) => {
       name: "CAPITALIST",
       cost: 1100000,
       daily: 75952,
-      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(21)
+      matureDate: momentBusinessDays(new Date(), "DD-MM-YYYY").businessAdd(20)
         ._d,
     };
     bonus = 55000;
