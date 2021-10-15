@@ -396,7 +396,7 @@ router.post("/:user/ad", isLoggedIn, (req, res) => {
               res.json({ err });
             } else {
               user.isOnPlan=false
-              user.plan.pop();
+              user.plan=[]
               user.save(() => {
                 if (err) {
                   console.log(err);

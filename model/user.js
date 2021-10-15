@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
   referalEarnings: { type: Number, default: 0 },
 
   isReferred: { type: Boolean, default: false },
+  isOnPlan:{ type: Boolean, default: false },
   referee: String,
 
   image:[Image.schema],
