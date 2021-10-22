@@ -197,10 +197,7 @@ router.post("/:user/fiat", isLoggedIn, (req, res) => {
       console.log(err)
       res.redirect("/deposit");
     } else {
-      if (user.isOnPlan==true) {
-        console.log('error here!!')
-        res.redirect("/dashboard");
-      } else if(!user.isOnPlan || user.isOnPlan==false) {
+     if(!user.isOnPlan || user.isOnPlan==false) {
         if (user.interest < userFiat.amount) {
           res.redirect("/plan");
         } else {
@@ -232,6 +229,10 @@ router.post("/:user/fiat", isLoggedIn, (req, res) => {
           );
         }
       }
+      else if (user.isOnPlan==true && user.plan.length>1) {
+        console.log('error here!!')
+        res.redirect("/dashboard");
+      } 
     }
   });
 });
