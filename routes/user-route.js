@@ -180,46 +180,7 @@ router.post("/:user/bitcoin", (req, res) => {
   });
 });
 
-router.post("/:user/withdraw", isLoggedIn, (req, res) => {
-  const userWithdrawal = {
-    paymentDate: Date.now(),
-    amount: req.body.amount,
-    address: req.body.address,
-    user: req.params.user,
-  };
-  console.log(userWithdrawal);
-  User.findOne({ username: req.params.user }, (err, user) => {
-    if (err || user == null) {
-      res.redirect("/plan");
-    } else {
-      if (user.plan.length > 0) {
-        res.redirect("/dashboard");
-      } else {
-        if (user.withdrawble < userWithdrawal.amount) {
-          res.redirect("/plan");
-        } else if (user.withdrawble >= userWithdrawal.amount) {
-          user.withdrawble =
-            Number(user.withdrawble) - Number(userWithdrawal.amount);
-          user.ip = req.headers["x-forwarded-for"];
-          Withdraw.create(userWithdrawal, (err, withdraw) => {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log(withdraw);
-            }
-          });
-          user.save((err) => {
-            if (err) {
-              res.redirect("/plan");
-            } else {
-              res.redirect("/transactions");
-            }
-          });
-        }
-      }
-    }
-  });
-});
+
 
 router.post("/:user/fiat", isLoggedIn, (req, res) => {
   const userFiat = {
@@ -239,7 +200,7 @@ router.post("/:user/fiat", isLoggedIn, (req, res) => {
       if (user.isOnPlan==true) {
         console.log('error here!!')
         res.redirect("/dashboard");
-      } else {
+      } else if(!user.isOnPlan || user.isOnPlan==false) {
         if (user.interest < userFiat.amount) {
           res.redirect("/plan");
         } else {
@@ -274,6 +235,9 @@ router.post("/:user/fiat", isLoggedIn, (req, res) => {
     }
   });
 });
+
+
+
 
 router.post("/:user/deposit", isLoggedIn, (req, res) => {
   let couponcode = req.body.coupon;
