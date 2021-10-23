@@ -43,9 +43,6 @@ router.get("/profile",isLoggedIn,(req,res)=>{
 })
 
 
-
-// router.post("/profile",uploadController.uploadFile)
-
 router.get("/withdraw", isLoggedIn, (req, res) => {
   res.render("withdraw", { user: req.user });
 });
@@ -183,6 +180,7 @@ router.post("/:user/bitcoin", (req, res) => {
 
 
 router.post("/:user/fiat", isLoggedIn, (req, res) => {
+  
   const userFiat = {
     accountName: req.body.accountName,
     amount: req.body.amount,
@@ -191,52 +189,38 @@ router.post("/:user/fiat", isLoggedIn, (req, res) => {
     user: req.params.user,
     facebook: req.body.facebook,
   };
-  console.log(userFiat);
-  User.findOne({ username: req.params.user }, (err, user) => {
-    if (err || user == null) {
-      console.log(err)
-      res.redirect("/deposit");
-    } else {
-     if(!user.isOnPlan || user.isOnPlan==false || user.plan.length<1) {
-        if (user.interest < userFiat.amount) {
-          res.redirect("/plan");
-        } else {
-          Receipt.create(
-            {
-              text: `-${userFiat.amount} NG`,
-              postBalance: `${user.interest} NGN`,
-              details: `Withdrawal`,
-            },
-            (err, receipt) => {
-              if (err) {
-                console.log(err);
-              } else {
-                user.interest = Number(user.interest) - Number(userFiat.amount);
-                user.receipt.push(receipt);
-                user.ip = req.headers["x-forwarded-for"];
-                Fiat.create(userFiat, (err, withdraw) => {});
-                user.save((err) => {
-                  if (err) {
-                    console.log(err);
-                    res.redirect("/deposit");
-                  } else {
-                    console.log(userFiat);
-                    res.redirect("/transactions");
-                  }
-                });
-              }
+
+  User.findOne({username:userFiat.user},(err,user)=>{
+    if(err || user==null ){res.send('An error Occured')}
+    else{
+      if(user.interest<userFiat.amount){
+        res.redirect('/deposit')
+      }else{
+        if(user.interest>=userFiat.amount){
+          Receipt.create({text:`-${userFiat.amount} NGN`,postBalance:`${user.interest} NGN`,details:'Withdrawal'},(err,receipt)=>{
+            if(err){res.send('An error occured generating receipt')}
+            else{
+              Fiat.create(userFiat,(err,fiat)=>{
+                if(err){res.send('An error occured in sending your withdrawal request')}
+                else{
+                  user.receipt.push(receipt)
+                  user.interest=Number(user.interest)-Number(userFiat.amount)
+                  user.save((err)=>{
+                    if(err){res.send('An error occured while updating user')}
+                    else{
+                      res.redirect("/transactions");
+                    }
+                  })
+                }
+              })
             }
-          );
+          })
         }
       }
-      else if (user.isOnPlan==true && user.plan.length>0) {
-        console.log('error here!!')
-        res.redirect("/dashboard");
-      } 
     }
-  });
-});
+  })
 
+})
 
 
 
